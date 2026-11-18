@@ -1,0 +1,423 @@
+/* v2_adaptive_loop.c — v1_genesis.c + code-13-loop-call-adaptive-weights.c
+ *
+ * Integrated C11 substrate. Lineage:
+ *   v1_genesis.c              (mithrax-splicing-session/code-10-genesis-substrate-complete.c, 7a1a27f)
+ *   + code-13-loop-call-adaptive-weights.c (mithrax-splicing-session, 7a1a27f):
+ *     - LOOP (0x07) / END (0x08) statically balanced at load time, bounded by fuel
+ *     - content-addressed CALL (0x09) into Arena cells
+ *     - 10-byte in-Cell adaptive prior vector HDR_WEIGHTS (body[2..11])
+ *     - multiplicative weight updates (adapt_prior) on tournament victory
+ *     - load-time seam verification (verify_and_map) replacing map_seams
+ *
+ * Fixed during integration (not present in the raw capture):
+ *   - CODE_START moved 2 -> 12 so the fuel header and adaptive prior vector
+ *     share body[0..11]; LOOP..END load-time balance enforced on seam scan.
+ *   - sacred_splice fails closed: a parent that fails seam verification is
+ *     cloned unchanged instead of producing an unverifiable child.
+ *   - #include <netinet/in.h> with an INADDR_LOOPBACK fallback for portability.
+ *
+ * Build:
+ *   make -C ../c11        (or: gcc -O3 -Wall -Wextra -std=c11 v2_adaptive_loop.c -o v2_adaptive_loop)
+ * Run (two peering nodes):
+ *   ./v2_adaptive_loop 9001 9002 &
+ *   ./v2_adaptive_loop 9002 9001
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#ifndef INADDR_LOOPBACK
+#define INADDR_LOOPBACK 0x7f000001 /* 127.0.0.1, portable fallback */
+#endif
+
+// Body layout: [0..1] fuel/fork marker | [2..11] HDR_WEIGHTS (10 adaptive
+// codon weights) | [12..1023] executable bytecode.
+#define HDR_WEIGHTS 2   // body[2..11]: 10 deterministic adaptive codon weights
+#define CODE_START  12  // body[12..1023]: executable bytecode
+
+// ─── 1. UNIVERSAL 1,088-BYTE CELL (RAM == WIRE == HASH PRE-IMAGE) ─────────────
+typedef struct __attribute__((packed)) {
+    uint8_t left[32];     // Operator / Causal Parent / Mitosis Variant A
+    uint8_t right[32];    // Operand  / Input Payload / Mitosis Variant B
+    uint8_t body[1024];   // [0..1]: Fuel (0xFFFF == Fork) | [2..11]: Priors | [12..]: Bytes
+} Cell;
+
+#define ARENA_BITS 14
+#define ARENA_CAP  (1 << ARENA_BITS)
+
+static Cell    arena[ARENA_CAP];
+static uint8_t names[ARENA_CAP][32];
+static uint8_t occupied[ARENA_CAP];
+static uint8_t ancestor_a[32], ancestor_b[32];
+
+// ─── 2. 256-BIT ARX SPONGE & O(1) CONTENT-ADDRESSED ARENA ────────────────────
+static void hash_cell(const Cell *c, uint8_t out[32]) {
+    uint64_t s[4] = {0x6a09e667f3bcc908ULL, 0xbb67ae8584caa73bULL,
+                     0x3c6ef372fe94f82bULL, 0xa54ff53a5f1d36f1ULL};
+    const uint64_t *w = (const uint64_t *)c;
+    for (int i = 0; i < (int)(sizeof(Cell) / 8); i++) {
+        s[i & 3] ^= w[i];
+        for (int r = 0; r < 4; r++) {
+            s[0] += s[1]; s[1] = (s[1] << 13) | (s[1] >> 51); s[1] ^= s[0];
+            s[2] += s[3]; s[3] = (s[3] << 17) | (s[3] >> 47); s[3] ^= s[2];
+            s[0] += s[3]; s[3] = (s[3] << 21) | (s[3] >> 43); s[3] ^= s[0];
+            s[2] += s[1]; s[1] = (s[1] << 29) | (s[1] >> 35); s[1] ^= s[2];
+        }
+    }
+    memcpy(out, s, 32);
+}
+
+static int is_zero(const uint8_t h[32]) {
+    uint8_t acc = 0;
+    for (int i = 0; i < 32; i++) acc |= h[i];
+    return acc == 0;
+}
+
+static int resolve(const uint8_t h[32]) {
+    uint32_t idx = *(const uint32_t *)h & (ARENA_CAP - 1);
+    for (int n = 0; n < ARENA_CAP; n++) {
+        uint32_t slot = (idx + n) & (ARENA_CAP - 1);
+        if (!occupied[slot]) return -1;
+        if (memcmp(names[slot], h, 32) == 0) return (int)slot;
+    }
+    return -1;
+}
+
+static int ingest(const Cell *c, uint8_t out_h[32]) {
+    uint8_t h[32];
+    hash_cell(c, h);
+    if (out_h) memcpy(out_h, h, 32);
+    uint32_t idx = *(const uint32_t *)h & (ARENA_CAP - 1);
+    for (int n = 0; n < ARENA_CAP; n++) {
+        uint32_t slot = (idx + n) & (ARENA_CAP - 1);
+        if (!occupied[slot] || memcmp(names[slot], h, 32) == 0) {
+            arena[slot] = *c;
+            memcpy(names[slot], h, 32);
+            occupied[slot] = 1;
+            return (int)slot;
+        }
+    }
+    return -1;
+}
+
+// ─── 3. ADAPTIVE PRIOR MACHINERY (from code-13) ───────────────────────────────
+// Op table: 01:PUSH 02:LOAD 03:ADD 04:XOR 05:EMIT 06:ASSERT 07:LOOP 08:END 09:CALL
+static inline int codon_meta(uint8_t op, int *req_sp, int *d_sp) {
+    switch (op) {
+        case 0x01: *req_sp = 0; *d_sp = +1; return 2; // PUSH imm
+        case 0x02: *req_sp = 1; *d_sp =  0; return 1; // LOAD [in]
+        case 0x03:
+        case 0x04: *req_sp = 2; *d_sp = -1; return 1; // ADD / XOR
+        case 0x05:
+        case 0x06: *req_sp = 1; *d_sp = -1; return 1; // EMIT / ASSERT
+        case 0x07: *req_sp = 0; *d_sp =  0; return 1; // LOOP (mark)
+        case 0x08: *req_sp = 1; *d_sp = -1; return 1; // END  (pop cond, branch if !=0)
+        case 0x09: *req_sp = 1; *d_sp =  0; return 1; // CALL (sub-cell transform)
+        default:   *req_sp = 0; *d_sp =  0; return 0;
+    }
+}
+
+// Load-time invariant check: verifies stack bounds AND balanced, zero-delta LOOP..END
+static int verify_and_map(const uint8_t *body, uint16_t *off, uint8_t *depth) {
+    int pc = CODE_START, sp = 0, csp = 0, n = 0;
+    int loop_sp[16];
+    while (pc < 1024 && body[pc] != 0x00 && n < 512) {
+        uint8_t op = body[pc];
+        int req, dsp, len = codon_meta(op, &req, &dsp);
+        if (len == 0 || pc + len > 1024 || sp < req || sp + dsp > 64) return -1;
+
+        if (op == 0x07) {
+            if (csp >= 16) return -1;
+            loop_sp[csp++] = sp; // Record stack depth at LOOP entry
+        } else if (op == 0x08) {
+            if (csp <= 0 || (sp + dsp) != loop_sp[--csp]) return -1; // Enforce Δsp == 0!
+        }
+        // Only expose top-level (csp == 0) seams so splices never rip a LOOP in half
+        if (csp == 0) { off[n] = (uint16_t)pc; depth[n] = (uint8_t)sp; n++; }
+        sp += dsp; pc += len;
+    }
+    if (csp != 0) return -1; // Unclosed LOOP rejected at load time
+    off[n] = (uint16_t)pc; depth[n] = (uint8_t)sp;
+    return n;
+}
+
+// Deterministic CDF sampler driven purely by ARX hash byte + Cell's live prior.
+// Exposed (external linkage) for future adaptive mutation operators; kept out
+// of the hot path so current tournament behaviour is byte-identical to v1.
+uint8_t sample_codon(const uint8_t weights[10], uint8_t entropy_byte) {
+    uint32_t total = 0;
+    for (int i = 1; i <= 9; i++) total += (weights[i] ? weights[i] : 16);
+    uint32_t target = ((uint32_t)entropy_byte * total) >> 8, acc = 0;
+    for (int i = 1; i <= 9; i++) {
+        acc += (weights[i] ? weights[i] : 16);
+        if (target < acc) return (uint8_t)i;
+    }
+    return 0x04;
+}
+
+// Deterministic Multiplicative-Weights update on tournament victory
+static void adapt_prior(Cell *winner_fn, uint16_t fuel_margin) {
+    uint8_t *w = &winner_fn->body[HDR_WEIGHTS];
+    uint8_t seen[10] = {0};
+    for (int pc = CODE_START; pc < 1024 && winner_fn->body[pc] != 0x00; ) {
+        uint8_t op = winner_fn->body[pc];
+        int req, dsp, len = codon_meta(op, &req, &dsp);
+        if (len <= 0) break;
+        if (op <= 9) seen[op] = 1;
+        pc += len;
+    }
+    uint8_t boost = (fuel_margin > 15) ? 16 : (uint8_t)(fuel_margin + 1);
+    for (int i = 1; i <= 9; i++) {
+        uint16_t cur = w[i] ? w[i] : 16;
+        cur = seen[i] ? (cur + boost) : (cur - (cur >> 3));
+        w[i] = (uint8_t)(cur > 255 ? 255 : (cur < 2 ? 2 : cur));
+    }
+}
+
+// ─── 4. DETERMINISTIC STACK REDUCER (FUEL-METERED, from code-13) ─────────────
+static uint16_t step_branch(const Cell *fn, const Cell *in, uint16_t fuel, Cell *out) {
+    uint16_t dummy_o[513]; uint8_t dummy_d[513];
+    if (verify_and_map(fn->body, dummy_o, dummy_d) < 0) return 0; // Gate untrusted Cell
+
+    memset(out, 0, sizeof(Cell));
+    memcpy(&out->body[HDR_WEIGHTS], &fn->body[HDR_WEIGHTS], 10); // Inherit prior
+    uint8_t stack[64] = {0};
+    uint16_t cstack[16] = {0};
+    int sp = 0, csp = 0, pc = CODE_START, wp = CODE_START;
+
+    while (pc < 1024 && fn->body[pc] != 0x00) {
+        if (fuel-- == 0) return 0;
+        uint8_t op = fn->body[pc++];
+        if      (op == 0x01) stack[sp++] = fn->body[pc++];
+        else if (op == 0x02) stack[sp-1] = in->body[CODE_START + (stack[sp-1] & 1011)];
+        else if (op == 0x03) { stack[sp-2] += stack[sp-1]; sp--; }
+        else if (op == 0x04) { stack[sp-2] ^= stack[sp-1]; sp--; }
+        else if (op == 0x05 && wp < 1024) out->body[wp++] = stack[--sp];
+        else if (op == 0x06) { if (!stack[--sp]) return 0; }
+        else if (op == 0x07) { cstack[csp++] = (uint16_t)pc; }
+        else if (op == 0x08) {
+            if (stack[--sp] != 0) {
+                uint16_t penalty = (uint16_t)csp; // Deeper loops cost extra fuel
+                if (fuel < penalty) return 0;
+                fuel -= penalty;
+                pc = cstack[csp - 1];             // Deterministic backward jump
+            } else csp--;
+        }
+        else if (op == 0x09) { // CALL fn->left on a synthetic 1-byte input Cell
+            int callee = resolve(fn->left);
+            if (callee < 0 || fuel < 4) return 0;
+            Cell sub_in = {0}, sub_out = {0};
+            sub_in.body[CODE_START] = stack[sp - 1];
+            uint16_t rem = step_branch(&arena[callee], &sub_in, fuel >> 1, &sub_out);
+            if (rem == 0) return 0;
+            fuel -= ((fuel >> 1) - rem);
+            stack[sp - 1] = sub_out.body[CODE_START];
+        }
+    }
+    *(uint16_t *)out->body = fuel;
+    return fuel;
+}
+
+// ─── 5. SACRED SPLICER (STACK-BALANCED RECOMBINATION & TRANSMUTATION) ─────────
+static void sacred_splice(const Cell *pa, const Cell *pb, const uint8_t seed[32], uint8_t out_fork[32]) {
+    uint16_t oa[513], ob[513];
+    uint8_t  da[513], db[513];
+    int na = verify_and_map(pa->body, oa, da);
+    int nb = verify_and_map(pb->body, ob, db);
+
+    Cell ca = {0}, cb = {0};
+    *(uint16_t *)ca.body = 512;
+    *(uint16_t *)cb.body = 512;
+
+    if (na < 0 || nb < 0) {
+        // Fail closed: an unverifiable parent is cloned unchanged; the fork
+        // still carries deterministic Merkle lineage and stays replayable.
+        ca = *pa; cb = *pa;
+        ca.body[0] = 0x00; ca.body[1] = 0x02; // fuel 512
+        cb.body[0] = 0x00; cb.body[1] = 0x02;
+        Cell fork_cell = {0};
+        *(uint16_t *)fork_cell.body = 0xFFFF;
+        ingest(&ca, fork_cell.left);
+        ingest(&cb, fork_cell.right);
+        ingest(&fork_cell, out_fork);
+        return;
+    }
+
+    int cut_a = (na > 0) ? (seed[0] % (na + 1)) : 0, cut_b = -1;
+    for (int i = 0; i <= nb; i++) {
+        int probe = (seed[1] + i) % (nb + 1);
+        if (db[probe] == da[cut_a]) { cut_b = probe; break; }
+    }
+    int head_len = oa[cut_a] - CODE_START;
+    memcpy(&ca.body[CODE_START], &pa->body[CODE_START], head_len);
+    if (cut_b >= 0) {
+        int tail_len = ob[nb] - ob[cut_b];
+        if (CODE_START + head_len + tail_len < 1023)
+            memcpy(&ca.body[CODE_START + head_len], &pb->body[ob[cut_b]], tail_len);
+    }
+
+    memcpy(&cb.body[CODE_START], &pa->body[CODE_START], oa[na] - CODE_START);
+    if (na > 0) {
+        int target = oa[seed[2] % na];
+        uint8_t op = cb.body[target];
+        if      (op == 0x01) cb.body[target + 1] ^= (seed[3] ? seed[3] : 1);
+        else if (op == 0x03) cb.body[target] = 0x04;
+        else if (op == 0x04) cb.body[target] = 0x03;
+        else if (op == 0x02 && oa[na] + 3 < 1023) {
+            memmove(&cb.body[target + 4], &cb.body[target + 1], oa[na] - (target + 1));
+            cb.body[target + 1] = 0x01; cb.body[target + 2] = seed[3]; cb.body[target + 3] = 0x04;
+        }
+    }
+
+    Cell fork_cell = {0};
+    *(uint16_t *)fork_cell.body = 0xFFFF;
+    ingest(&ca, fork_cell.left);
+    ingest(&cb, fork_cell.right);
+    ingest(&fork_cell, out_fork);
+}
+
+// ─── 6. CONTINUOUS FLOW LOOP (UDP WIRE <-> MITOSIS <-> LINEAGE) ──────────────
+static void flow(int sock, struct sockaddr_in *peer, uint8_t root[32], uint8_t champ[32]) {
+    uint8_t pkt[sizeof(Cell)];
+    struct sockaddr_in src;
+    socklen_t slen = sizeof(src);
+
+    ssize_t n = recvfrom(sock, pkt, sizeof(pkt), MSG_DONTWAIT, (struct sockaddr *)&src, &slen);
+    if (n == 32) {
+        int hit = resolve(pkt);
+        if (hit >= 0) sendto(sock, &arena[hit], sizeof(Cell), MSG_DONTWAIT, (struct sockaddr *)&src, slen);
+    } else if (n == sizeof(Cell)) {
+        uint8_t arrived[32];
+        ingest((const Cell *)pkt, arrived);
+        if (memcmp(arrived, root, 32) > 0) memcpy(root, arrived, 32);
+    }
+
+    int r_slot = resolve(root);
+    if (r_slot < 0) { sendto(sock, root, 32, MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer)); return; }
+    Cell *active = &arena[r_slot];
+    if (is_zero(active->left)) return;
+
+    int f_slot = resolve(active->left);
+    if (f_slot < 0) { sendto(sock, active->left, 32, MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer)); return; }
+    int x_slot = resolve(active->right);
+    if (x_slot < 0) { sendto(sock, active->right, 32, MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer)); return; }
+
+    Cell *fn = &arena[f_slot], *in = &arena[x_slot];
+    uint16_t f_hdr = *(uint16_t *)fn->body;
+
+    if (f_hdr == 0xFFFF) { // MITOSIS A/B FUEL TOURNAMENT
+        int a_slot = resolve(fn->left), b_slot = resolve(fn->right);
+        if (a_slot < 0) { sendto(sock, fn->left, 32, MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer)); return; }
+        if (b_slot < 0) { sendto(sock, fn->right, 32, MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer)); return; }
+
+        Cell out_a, out_b;
+        uint16_t fit_a = step_branch(&arena[a_slot], in, 512, &out_a);
+        uint16_t fit_b = step_branch(&arena[b_slot], in, 512, &out_b);
+
+        if (fit_a > 0 || fit_b > 0) {
+            uint8_t ha[32], hb[32];
+            hash_cell(&out_a, ha); hash_cell(&out_b, hb);
+            int a_wins = (fit_a > fit_b || (fit_a == fit_b && memcmp(ha, hb, 32) > 0));
+            Cell *win = a_wins ? &out_a : &out_b;
+            uint16_t margin = (fit_a > fit_b) ? (uint16_t)(fit_a - fit_b)
+                                              : (uint16_t)(fit_b - fit_a);
+            adapt_prior(win, margin); // Winner's in-Cell prior travels with the genome
+            memcpy(champ, a_wins ? fn->left : fn->right, 32);
+            memcpy(win->left, champ, 32);
+            memcpy(win->right, root, 32);
+            ingest(win, root);
+            sendto(sock, win, sizeof(Cell), MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer));
+            return;
+        }
+    } else { // SINGLE-STRAND REDUCTION
+        Cell out;
+        uint16_t fit = step_branch(fn, in, *(uint16_t *)active->body, &out);
+        if (fit > 0) {
+            adapt_prior(&out, (fit > 15) ? 15 : fit);
+            memcpy(champ, active->left, 32);
+            memcpy(out.left, champ, 32);
+            memcpy(out.right, root, 32);
+            ingest(&out, root);
+            sendto(sock, &out, sizeof(Cell), MSG_DONTWAIT, (struct sockaddr *)peer, sizeof(*peer));
+            return;
+        }
+    }
+
+    // TRAP OR DOUBLE-EXTINCTION -> SACRED SPLICE NEW MITOSIS FORK
+    int c_slot = resolve(champ), b_slot = resolve(ancestor_b);
+    uint8_t fork_h[32], seed[32];
+    hash_cell(active, seed);
+    if (c_slot >= 0 && b_slot >= 0) sacred_splice(&arena[c_slot], &arena[b_slot], seed, fork_h);
+    else {
+        memset(fork_h, 0, sizeof(fork_h));
+        if (c_slot >= 0) memcpy(fork_h, champ, 32); else memcpy(fork_h, ancestor_b, 32);
+    }
+
+    Cell next_gen = {0};
+    memcpy(next_gen.left, fork_h, 32);
+    memcpy(next_gen.right, active->right, 32);
+    *(uint16_t *)next_gen.body = 512;
+    ingest(&next_gen, root);
+}
+
+// ─── 7. SELF-BOOTSTRAPPING HARNESS ───────────────────────────────────────────
+int main(int argc, char **argv) {
+    uint16_t my_port   = (argc > 1) ? (uint16_t)atoi(argv[1]) : 9001;
+    uint16_t peer_port = (argc > 2) ? (uint16_t)atoi(argv[2]) : 9002;
+
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    struct sockaddr_in me = {.sin_family = AF_INET, .sin_port = htons(my_port), .sin_addr.s_addr = htonl(INADDR_LOOPBACK)};
+    struct sockaddr_in peer = {.sin_family = AF_INET, .sin_port = htons(peer_port), .sin_addr.s_addr = htonl(INADDR_LOOPBACK)};
+
+    bind(sock, (struct sockaddr *)&me, sizeof(me));
+    // Seed Ancestor A (bloated with neutral XOR intron: PUSH 0, LOAD, PUSH 0, XOR, EMIT, HALT)
+    Cell a = {0}; *(uint16_t *)a.body = 512;
+    uint8_t code_a[] = {0x01, 0x00, 0x02, 0x01, 0x00, 0x04, 0x05, 0x00};
+    memcpy(&a.body[CODE_START], code_a, sizeof(code_a));
+    ingest(&a, ancestor_a);
+    // Seed Ancestor B (leaner strand: PUSH 0, LOAD, EMIT, HALT)
+    Cell b = {0}; *(uint16_t *)b.body = 512;
+    uint8_t code_b[] = {0x01, 0x00, 0x02, 0x05, 0x00};
+    memcpy(&b.body[CODE_START], code_b, sizeof(code_b));
+    ingest(&b, ancestor_b);
+    uint8_t champ[32], root[32];
+    memcpy(champ, ancestor_a, 32);
+    printf("[NODE :%u <-> :%u] Igniting continuous evolutionary flow...\n", my_port, peer_port);
+    for (int tick = 0; tick < 8; tick++) {
+        // Feed live input byte into Arena & bind to current Champion
+        Cell in = {0}; in.body[CODE_START] = (uint8_t)(0x41 + tick);
+        uint8_t in_h[32]; ingest(&in, in_h);
+        // Every odd tick, force a Mitosis tournament between Champion and Ancestor B
+        uint8_t op_h[32];
+        if (tick & 1) {
+            uint8_t seed[32]; hash_cell(&in, seed);
+            int cs = resolve(champ), bs = resolve(ancestor_b);
+            if (cs >= 0 && bs >= 0) sacred_splice(&arena[cs], &arena[bs], seed, op_h);
+            else memcpy(op_h, champ, 32);
+        } else {
+            memcpy(op_h, champ, 32);
+        }
+        Cell task = {0};
+        memcpy(task.left, op_h, 32); memcpy(task.right, in_h, 32);
+        *(uint16_t *)task.body = 512;
+        ingest(&task, root);
+        flow(sock, &peer, root, champ);
+        int rr = resolve(root);
+        if (rr >= 0) {
+            Cell *res = &arena[rr];
+            printf("Tick %d | Champ=%02x%02x%02x%02x | FuelLeft=%3u | OutByte='%c' (0x%02x)\n",
+            tick, champ[0], champ[1], champ[2], champ[3],
+            *(uint16_t *)res->body, res->body[CODE_START], res->body[CODE_START]);
+        } else {
+            printf("Tick %d | Champ=%02x%02x%02x%02x | <root unresolved>\n", tick, champ[0], champ[1], champ[2], champ[3]);
+        }
+        usleep(50000);
+        }
+    close(sock);
+    return 0;
+}

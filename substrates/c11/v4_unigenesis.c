@@ -9,6 +9,10 @@
 #include <math.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#ifndef INADDR_LOOPBACK
+#define INADDR_LOOPBACK 0x7f000001 /* 127.0.0.1, portable fallback when feature-test macros hide it */
+#endif
 
 /* ============================================================================
  * 1. THE 1,088-BYTE ATOMIC CELL & HEADER GEOMETRY
