@@ -1,0 +1,53 @@
+{
+  "dom_stats": {
+    "html_bytes": 2617375,
+    "pre_count": 1,
+    "code_count": 83,
+    "iframe_count": 4,
+    "canvas_count": 1,
+    "svg_count": 588
+  },
+  "widgets": [],
+  "html_parts": [
+    {
+      "index": 1,
+      "content_type": "text/html",
+      "size": 2617375,
+      "cid": "<frame-9E4FF5EF708C93887054934E54DE9DDD@mhtml.blink>",
+      "location": "https://www.google.com/search?q=mithrax+splicing&oq=mithrax+splicing&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRigATIHCAUQIRifBdIBBzE0MWowajeoAgCwAgA&sourceid=chrome&source=chrome.ob&ie=UTF-8&mstk=AUtExfAV67Kd8xt5ZqwLRSHZ2EmcwlxtcgEUPl832emUDL0PE0YbTJaALHlz6K6ji9OAYle4vgSgpZjG9Gs_rlsfg3V1gbOR16l5-7PN5lkeCMXxfUeViq52BcldFnByFrO7VxOH0YBbRx7oDNJg7UsKwzjeKtveb2VPpTDMlye9dzM3fSkeLq1l2jHuCekdRwpqrsFKuE9NnOpbx4T4q1Ui9sJWLENxyQ&csuir=1&aioh=3&udm=50&arv=4#aof=1",
+      "saved_as": "dom.html"
+    },
+    {
+      "index": 225,
+      "content_type": "text/html",
+      "size": 121,
+      "cid": "<frame-3EE2B71EFAC853FCA7B20F19D0D0F8E5@mhtml.blink>",
+      "location": "https://accounts.google.com/RotateCookiesPage?og_pid=1&rot=3&origin=https%3A%2F%2Fwww.google.com&exp_id=0",
+      "saved_as": "frames/frame_01.html"
+    },
+    {
+      "index": 226,
+      "content_type": "text/html",
+      "size": 6355,
+      "cid": "<frame-0D586F37C4D94830A25F14EC201105B6@mhtml.blink>",
+      "location": "https://www.youtube.com/embed/?enablejsapi=1&rel=0&autoplay=0&playsinline=1&fs=1&hl=en&authuser=0&embed_config=%7B%22enc%22%3A%22AXH1ezm4S0hHrWkTtUx0qHMDg5GbYMeO4q5kFG4nkekGBXY1Q3zSSRJpWNAX6ewkdeFjLKGFE4gbPuDNSUzhtLGGPc3qUK4v22Cv53tNxOgD4v-YN--SqnL3UOMAe_arNtLdBpZPeeiFj4Gy2VycL31L7pkawASxATbnEIBe3ZVa3RFAXBBnvlmAD3xtEBLQwZrn7l-xviKIXc-lBucFqeqO3c4tAK_MtWsYvFKCTO-zrMrxLEq-t_m7KU5oWBIAT1-ikuzSJ02unaYcNjSuaR33WKgVmWToAP23kz2RjwPNyc3DTd8UXFMjId2b0Kl_O5eCi-CD2mI%3D%22%7D",
+      "saved_as": "frames/frame_02.html"
+    },
+    {
+      "index": 232,
+      "content_type": "text/html",
+      "size": 54981,
+      "cid": "<frame-49CEEC3D1233F3FD0629D61A822C28D8@mhtml.blink>",
+      "location": "https://ogs.google.com/u/0/widget/app?eom=1&awwd=1&gpa=4&em=2&scv=1&dpi=89978449&origin=https%3A%2F%2Fwww.google.com&cn=app&pid=1&spid=1&hl=en&xstg=CAMS5hMV5BSqs2y-viqMxNEE-gPHBaDVowL-oLsFsgPcrEndkgWnWL1VMpYTuRHqHqQS1Qb6ApwBoRT2AskAAfIPE6UETN4GSGQzFg0qpwSUBgkawwRu9Qk2X9DygwL4F44BAqkI-OeUBrIExAQk-wXzAs3hBfaJDKcGtAbNBg-pjAS3A4X-fLH1INYBnQSxA9kC9wO171u1iKUGrLMD-cYx16bvDYzQDLbPFfASqDTsMORZ5Db2Hi7KKp8LpB77OvQImpYT7cYbmYwC3ssA9-PbDpr2DbwnhgMT2AHEzAXt1RzsXIhr6SmmgQTUvgKuubwGuvwB7eIu0eQKl78FotQdhtIC3iqZF4-0BscT_SfRCLFHrzyyBQD-GsUfOastoBquGZAO2VOjA8gW7winCvoXmBTTApkDjxXWAL0GlwR0iQWaBZIIct8PtBGdDNkFqAGnJbwA1AHUFbkD_iXjjDqPBmkCjwSSAIkF_QWSBV6BBTWmAk4cVcsGNwkWdJl8-Q87gwBA5QT7ANsDDIQG1AzZCpQGog-QBfEGpwZt3pYB7wUaiAYAAf0GDAsFBtaEBa8LsQ-bFR0K2oYRoUl-QMIMwQueBdc2wgPPBBIFZbQE0gWPBdYFMzVDDH0BC6wFFoUDiQ6SAZgGEheiBmWQBtkGxQaoBh5otwYK7wUJLyYnIwxWEeYEQx0VCZ4GAwKDAxAXGWETG1itBkaxBiATsq8GySwFvAKkKgWhF74pyDGzIZwXlyYJnrsO-QPvADW9qRin6QSD_Q3sMajTBZLhAp_HDci6Gf_YBrdv9R-1xQ7nBJSWBgeg4liQAZIFzAWfBocDsQYD7AOfBRW7BdQI6AGgC_APdAC9BqwC7BPFERTQBrQEZ5wOtA33H5kOlQapAqgA_wSlC8MB-wijBOwhBQ_oD9UJkQGWBp8GvQ7-CskGggPlAqwGlAbSANgG4hadBiHdD-MIpAPkC88E9wPAGOcAwA_ID5UF9wy5BJAG0AGcAtUPnQOCA8wExwDEBeQGmwWeCLUAzQY4IoIFHJcEgQr3BokJ0wPcA8UPsQ3YBqADdnj6D-QMywbdAuEDBf8GZ5cjugCVCewETMUKlgOfBtwFyrkEqG7c_AIHkIwFsKoIiJ8AloYGoG7fPriSDZTpA6ivBtj2A_LoH8DKBNgFqpYG-ZYG3eECwuwFieUEtTX1lAahrQSM2QHQ8Aa-pQKMpQXmdsiVBuUk5ifYzgWT7gb1kASjogHcFKVryZsGlEDPkgS73QXsRs44qrcCwO4D-t-GA5K6BpiJA09Gqxi97AKrggYFpPwF-P4LApmCBdKgAuiABdxdkmGtFv2FBN84mgS1ONfbBtajBt498fAFppgEzy_X9Aau3QWDhQME38UGgS6SmQDt4gaZxgYEhFGgqgTk3QSF3gGoCaPGBc_HAt4CnY8E768EwrMF77AEjYsG11zUpQO1LvugDvSAAr2fBqcE3KwGlpwDnY0GqkLZmgUFk_8G9KcDuIQFkYsFqoQGoE_bFdPjA8CsBvARiJkF3IUGoDWi5wQFgaIB_dMGvkWCPbiiBuWyA-SQBr9SA6SmBtErjTegFeylBdD2BeVTkMEGlAbJlQX5DKbdBJ7XBaO2BZfxAfGSBASw1QPI_gKs_QbryATPTuL-BcfTBtpvqVPThQS3jwOdIeHIBNU_yNsGlz3Wa5jQBI6GA9SUBeISyoYFrxDKkwW49AZO5NMGnIcEvkvagwbmgwTt_AMF7SqwBgPmvgWtswHqUZDSBoTYAqIJixDQBgykHOPDBrWSBvfVBfsd2QahnwbuH_kA5U70NcbTBtBEw50FBfsFiGSjggaYedcglhiJYL5z0AzgGoAhhQ36ZM5Agxm0evIpoRP2T-o654sG-w-cXeginAD7Gc8CvEqMHb4xwUD_cYA9hlO0ygbEAJC2Bo0P9GWqFrUK1Ar5HtY06TKjigb3dpyjBqEYv7UGxRf6fotayzTAErQK-ijyKZEu2YsFsxC8N9V2gkzEBcAd2QznHfo_nzmZHsZKpxbRXwXhBMAE7F7bvQS7hQbhCIkp1wDs6waDJLkGjl7lcIzoBceNBqYNvpQG4ynhDaBjufQGrLUG_M0FyT60FpYhh36XCgP1GtEfhibtlAWQ-wXMKIOCBimlLIFJtyyNMrUL5T6DBEPewwaoA4Zdhg6W7waEDP475Cu4JrPLBckYzXSAAsgP9RTrIYpdkzqLPc9v1C-wCoongR-tN2KsHt0U4yqiNPdG4RWvGkmZA6Ew5AaQMOIEiyvmAPchjD34Brol8RKiGK4nFaQeMtcF2iKfBpUeNOEI9R_-Ac0BshDvEM1OmTvKA50K6wXMEdczgWGTD_hJyhSLFKMx7gmxEdcGqSlq0RzBCbJEziXvF8oBpwyrBZMR7Df-O60CwQb2Rv1UqCOGQKMGrgDVA_UCixe0F6gVtwrUGPYCEBIUEBIUEeMBaoQEqguXBg6LBe4LaIgGoxSgD5EllwARExGhBIIFvR-QCIkIuRwQFB-YWNQF9AWYxAvGAfAAA8sD7A2iBsMDvQHPBqsF0wIF6g4FanS7BpsOjQbYC7UCMYwAqw7jAa0AogrUAMIbxQyVBrUJ-A3nAbwC1AD2BLEGK_gAWULXBvkB1A13KbAE7gSnBPsDtBXhDo0GgQPjBe4F2QzKBHjuA4AFwAv-HekEygS2AqABygFrVbECyQGzAxfQDM4FU_AOlwa7Bv4GZZ8GoQBfY8EAxwNbxgUOyQZp3ALmBq8FqgZblQT6BbMFlwCvAawAmwQRSPADLxEqsQC2BQP_BYMEM_4ChAKxAhxi5wMGzwW1BWUd_gW9BeUFrQUFKh1fpASIBRSoFxwTQ-gFuQ-LAfgFTw4l6AXoC9ICBAQbc-oGgwamBmhgULMGExgW1AQEUB01FkTOBSNGG5AEEyQqtgYK0gxfAEeFBOkFDFS9BQqtBfEGpQZ56QYJ3gaVAeAFL6gGrwEE5gWaBlAmEgUsLhKaBK0FHAVXF-sG4wXDBY0G7QPPBVbkAQu6BhUoDSY4pgQdDt4Gp68hvR7mMsAE_Qb5Hf6hBrcb7KwG4BXDErIngd8GoSjjA8cX2IsGxLIGAgSycIYJoGsF-5YFowDGKd045nmvOJSYBJIxnSXl8gaa_gaOAJww40EDhTev3gaBAff8BqYQ4ymgC7EWwRrNJLVuitYGzkfwFaqyBs_KBsJ5ygy0hwYKk0KAOdX_BfS-Bv-iBsKaBuM7zSyKmgWkQwKzD5uZBpQWvBHqPIs9DwKETdEX72LNhgUDmir0ELQ27eUCwQXxsAb_0vsGhgKwBgYXqgZIyQYiD33hBTFXZPMPxgQw0gYjMhkED4AFGTuWBUpcfaQGdj84FUE6CBexBQidBq0GOg%3D%3D&dm=",
+      "saved_as": "frames/frame_03.html"
+    },
+    {
+      "index": 239,
+      "content_type": "text/html",
+      "size": 32088,
+      "cid": "<frame-F22CD4AC0B72CB437022375E72687EE6@mhtml.blink>",
+      "location": "https://ogs.google.com/u/0/widget/account?baea=1&cc=1&dpi=89978449&eom=1&origin=https%3A%2F%2Fwww.google.com&cn=account&pid=1&spid=1",
+      "saved_as": "frames/frame_04.html"
+    }
+  ]
+}

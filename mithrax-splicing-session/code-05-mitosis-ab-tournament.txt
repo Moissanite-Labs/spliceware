@@ -1,0 +1,13 @@
+                     [ Input Cell X ]
+                            │
+                  ┌─────────┴─────────┐  <── MITOSIS (Synth emits Fork Cell)
+                  ▼                   ▼
+         [ Variant A | X ]   [ Variant B | X ]
+         (Starts: 500 Fuel)  (Starts: 500 Fuel)
+                  │                   │
+                  ▼                   ▼
+          [ Out_A : 412 ]     [ Out_B : 190 ]  (or Trap!)
+                  │                   │
+                  └─────────┬─────────┘  <── NATURAL SELECTION (Fuel Tournament)
+                            ▼
+                 [ Root slides to Out_A ] ──▶ UDP Mesh Spill

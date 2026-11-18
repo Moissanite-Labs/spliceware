@@ -1,0 +1,4 @@
+[Input Bytes] ──▶ [Bounded Linear Memory] ──▶ [Fetch-Decode-Execute (fuel--)] ──▶ [Output Bytes]
+                                                        │ (if fuel == 0)
+                                                        ▼
+                                                 [Clean Halt Trap]
