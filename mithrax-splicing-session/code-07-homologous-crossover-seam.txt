@@ -1,0 +1,5 @@
+Parent A:  [PUSH 4] [LOAD] ──(Δsp = 0 cut)──▶ │ [PUSH 1] [ADD] │ ──▶ [EMIT] [HALT]
+                                              │   (Excised)    │
+Parent B:                     ... ──────────▶ │ [DUP]    [XOR] │ ──▶ ...
+                                              │  (Δsp = +1-1)  │
+Child A':  [PUSH 4] [LOAD] ──────────────────▶  [DUP]    [XOR]  ──▶ [EMIT] [HALT]

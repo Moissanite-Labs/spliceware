@@ -1,0 +1,15 @@
+         ┌─────────────────────────────────────────────────────┐
+         │              THE UNIFIED CELL ARENA                 │
+         │   [ 32B Hash : Left 32B | Right 32B | Raw Bytes ]   │
+         └──────────┬───────────────────────────────▲──────────┘
+                    │                               │
+           (Unresolved Hash?)               (Verified Bytes!)
+                    │                               │
+       ┌────────────┴────────────┐     ┌────────────┴────────────┐
+       ▼                         ▼     │                         │
+ [Local Fuel Step]       [UDP Wire Spill]              [UDP Packet Ingest]
+ (Reduce Graph In-Place) (Emit 32B Want)               (Hash -> Write Arena)
+       │                         │                               ▲
+       └─────────────────────────┴───────────────┬───────────────┘
+                                                 │
+                                    (On Trap: Synthesize Cell)
