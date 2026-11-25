@@ -38,6 +38,16 @@ typedef struct __attribute__((packed)) {
 
 _Static_assert(sizeof(Cell) == CELL_BYTES, "Cell must be strictly 1088 bytes");
 
+static inline int32_t get_hdr_i32(const Cell *c, int idx) {
+    int32_t v;
+    memcpy(&v, c->header + (size_t)idx * sizeof(int32_t), sizeof(v));
+    return v;
+}
+
+static inline void set_hdr_i32(Cell *c, int idx, int32_t v) {
+    memcpy(c->header + (size_t)idx * sizeof(int32_t), &v, sizeof(v));
+}
+
 /* ============================================================================
  * 2. INSTRUCTION SET (24 DETERMINISTIC CODONS + NO-OP MODULO SPACE)
  * ============================================================================ */
@@ -85,9 +95,8 @@ static inline uint64_t isqrt_u64(uint64_t n) {
 }
 
 static int verify_triangular_anchor(const Cell *c) {
-    const int32_t *hdr = (const int32_t *)c->header;
-    uint64_t lo = (uint32_t)hdr[HDR_ANCHOR_LO];
-    uint64_t hi = (uint32_t)hdr[HDR_ANCHOR_HI];
+    uint64_t lo = (uint32_t)get_hdr_i32(c, HDR_ANCHOR_LO);
+    uint64_t hi = (uint32_t)get_hdr_i32(c, HDR_ANCHOR_HI);
     uint64_t anchor = (hi << 32) | lo;
 
     if (anchor == 0) return 0;
@@ -103,9 +112,8 @@ static int verify_triangular_anchor(const Cell *c) {
 static void stamp_triangular_anchor(Cell *c, uint64_t k) {
     /* T_k = k * (k + 1) / 2 */
     uint64_t anchor = (k & 1ULL) ? k * ((k + 1ULL) >> 1) : (k >> 1) * (k + 1ULL);
-    int32_t *hdr = (int32_t *)c->header;
-    hdr[HDR_ANCHOR_LO] = (int32_t)(anchor & 0xFFFFFFFFULL);
-    hdr[HDR_ANCHOR_HI] = (int32_t)((anchor >> 32) & 0xFFFFFFFFULL);
+    set_hdr_i32(c, HDR_ANCHOR_LO, (int32_t)(anchor & 0xFFFFFFFFULL));
+    set_hdr_i32(c, HDR_ANCHOR_HI, (int32_t)((anchor >> 32) & 0xFFFFFFFFULL));
 }
 
 /* ============================================================================
@@ -360,8 +368,7 @@ static int32_t target_fn(int32_t x) {
 static int32_t evaluate_cell(Cell *c) {
     /* Enforce the 8-byte Triangular Sum Anchor Gate before execution */
     if (!verify_triangular_anchor(c)) {
-        int32_t *hdr = (int32_t *)c->header;
-        hdr[HDR_FITNESS] = INT32_MIN;
+        set_hdr_i32(c, HDR_FITNESS, INT32_MIN);
         return INT32_MIN;
     }
 
@@ -376,37 +383,39 @@ static int32_t evaluate_cell(Cell *c) {
     }
 
     int32_t fitness = (int32_t)(10000000LL - total_err);
-    int32_t *hdr = (int32_t *)c->header;
-    hdr[HDR_FITNESS] = fitness;
+    set_hdr_i32(c, HDR_FITNESS, fitness);
     return fitness;
 }
 
 /* Updates the cell's 8-element adaptive prior vector stored in its 64B header
  * based on whether the last mutation improved fitness. */
 static void adapt_prior(Cell *c, int32_t prev_fitness, int32_t new_fitness, uint8_t mutated_opcode) {
-    int32_t *hdr = (int32_t *)c->header;
     int bucket = mutated_opcode & 7;
-    int32_t delta = (new_fitness > prev_fitness) ? 12 : -4;
+    int64_t delta = (new_fitness > prev_fitness) ? 12 : -4;
 
-    int32_t w = hdr[HDR_WEIGHTS + bucket] + delta;
+    /* Compute in int64_t so untrusted migrant weights near INT32_MAX/MIN never overflow. */
+    int64_t w = (int64_t)get_hdr_i32(c, HDR_WEIGHTS + bucket) + delta;
     if (w < 10) w = 10;
     if (w > 1000) w = 1000;
-    hdr[HDR_WEIGHTS + bucket] = w;
+    set_hdr_i32(c, HDR_WEIGHTS + bucket, (int32_t)w);
 }
 
 static uint8_t sample_weighted_opcode(const Cell *c) {
-    const int32_t *hdr = (const int32_t *)c->header;
-    int32_t sum = 0;
+    int64_t sum = 0;
     for (int i = 0; i < 8; i++) {
-        int32_t w = hdr[HDR_WEIGHTS + i];
-        sum += (w > 0) ? w : 10;
+        int64_t w = (int64_t)get_hdr_i32(c, HDR_WEIGHTS + i);
+        if (w <= 0) w = 10;
+        if (w > 1000) w = 1000;
+        sum += w;
     }
-    int32_t r = rand() % sum;
-    int32_t acc = 0;
+    int64_t r = (int64_t)rand() % sum;
+    int64_t acc = 0;
     int chosen_bucket = 0;
     for (int i = 0; i < 8; i++) {
-        int32_t w = hdr[HDR_WEIGHTS + i];
-        acc += (w > 0) ? w : 10;
+        int64_t w = (int64_t)get_hdr_i32(c, HDR_WEIGHTS + i);
+        if (w <= 0) w = 10;
+        if (w > 1000) w = 1000;
+        acc += w;
         if (r < acc) {
             chosen_bucket = i;
             break;
@@ -418,8 +427,7 @@ static uint8_t sample_weighted_opcode(const Cell *c) {
 }
 
 static void mutate_cell(Cell *c) {
-    int32_t *hdr = (int32_t *)c->header;
-    int32_t prev_fit = hdr[HDR_FITNESS];
+    int32_t prev_fit = get_hdr_i32(c, HDR_FITNESS);
 
     int mutations = 1 + (rand() % 3);
     uint8_t last_op = OP_NOP;
@@ -435,7 +443,9 @@ static void mutate_cell(Cell *c) {
         stamp_triangular_anchor(c, k);
     }
 
-    hdr[HDR_GENERATION]++;
+    /* Unsigned wrap avoids signed-overflow UB; converting >INT32_MAX to int32_t is
+     * implementation-defined two's-complement wrap on target platforms. */
+    set_hdr_i32(c, HDR_GENERATION, (int32_t)((uint32_t)get_hdr_i32(c, HDR_GENERATION) + 1u));
     int32_t new_fit = evaluate_cell(c);
     adapt_prior(c, prev_fit, new_fit, last_op);
 }
@@ -445,8 +455,7 @@ static void mutate_cell(Cell *c) {
  * ============================================================================ */
 static void seed_cell(Cell *c, uint64_t anchor_k) {
     memset(c, 0, sizeof(Cell));
-    int32_t *hdr = (int32_t *)c->header;
-    for (int i = 0; i < 8; i++) hdr[HDR_WEIGHTS + i] = 100;
+    for (int i = 0; i < 8; i++) set_hdr_i32(c, HDR_WEIGHTS + i, 100);
     stamp_triangular_anchor(c, anchor_k);
 
     /* Seed initial genome with DUP / OVER / arithmetic building blocks */
@@ -464,6 +473,7 @@ static void seed_cell(Cell *c, uint64_t anchor_k) {
     evaluate_cell(c);
 }
 
+#ifndef SPLICEWARE_TEST_HARNESS
 int main(int argc, char **argv) {
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <local_udp_port> [peer_udp_port]\n", argv[0]);
@@ -516,9 +526,9 @@ int main(int argc, char **argv) {
         ssize_t n = recvfrom(sock, &migrant, sizeof(Cell), 0, NULL, NULL);
         if (n == sizeof(Cell) && verify_triangular_anchor(&migrant)) {
             int worst_idx = 0;
-            int32_t worst_fit = ((int32_t *)arena[0].header)[HDR_FITNESS];
+            int32_t worst_fit = get_hdr_i32(&arena[0], HDR_FITNESS);
             for (int i = 1; i < POP_SIZE; i++) {
-                int32_t f = ((int32_t *)arena[i].header)[HDR_FITNESS];
+                int32_t f = get_hdr_i32(&arena[i], HDR_FITNESS);
                 if (f < worst_fit) {
                     worst_fit = f;
                     worst_idx = i;
@@ -532,8 +542,8 @@ int main(int argc, char **argv) {
         /* 2. Tournament selection + adaptive mutation */
         int a = rand() % POP_SIZE;
         int b = rand() % POP_SIZE;
-        int32_t fit_a = ((int32_t *)arena[a].header)[HDR_FITNESS];
-        int32_t fit_b = ((int32_t *)arena[b].header)[HDR_FITNESS];
+        int32_t fit_a = get_hdr_i32(&arena[a], HDR_FITNESS);
+        int32_t fit_b = get_hdr_i32(&arena[b], HDR_FITNESS);
 
         int winner = (fit_a >= fit_b) ? a : b;
         int loser  = (fit_a >= fit_b) ? b : a;
@@ -544,23 +554,22 @@ int main(int argc, char **argv) {
         /* 3. Periodic telemetry & horizontal gene transfer to peer */
         if ((tick % 5000) == 0) {
             int best_idx = 0;
-            int32_t best_fit = ((int32_t *)arena[0].header)[HDR_FITNESS];
+            int32_t best_fit = get_hdr_i32(&arena[0], HDR_FITNESS);
             for (int i = 1; i < POP_SIZE; i++) {
-                int32_t f = ((int32_t *)arena[i].header)[HDR_FITNESS];
+                int32_t f = get_hdr_i32(&arena[i], HDR_FITNESS);
                 if (f > best_fit) {
                     best_fit = f;
                     best_idx = i;
                 }
             }
 
-            const int32_t *bhdr = (const int32_t *)arena[best_idx].header;
-            uint64_t anchor = ((uint64_t)(uint32_t)bhdr[HDR_ANCHOR_HI] << 32) |
-                              (uint32_t)bhdr[HDR_ANCHOR_LO];
+            uint64_t anchor = ((uint64_t)(uint32_t)get_hdr_i32(&arena[best_idx], HDR_ANCHOR_HI) << 32) |
+                              (uint32_t)get_hdr_i32(&arena[best_idx], HDR_ANCHOR_LO);
 
             printf("[tick=%llu] best_fit=%d gen=%d anchor=%llu f(4)=%d (target=%d)\n",
                    (unsigned long long)tick,
                    best_fit,
-                   bhdr[HDR_GENERATION],
+                   get_hdr_i32(&arena[best_idx], HDR_GENERATION),
                    (unsigned long long)anchor,
                    run_cell(&arena[best_idx], 4),
                    target_fn(4));
@@ -576,3 +585,4 @@ int main(int argc, char **argv) {
     close(sock);
     return 0;
 }
+#endif
