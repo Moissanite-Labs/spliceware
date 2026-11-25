@@ -5,10 +5,22 @@ discovery session). This is an **architecture sketch**, not a buildable crate:
 it is preserved here as the Rust/Wasm reference point for the C11 collapse in
 `../c11/`, not as a production runtime.
 
-- `runtime_loop.rs` — clean copy of
-  `../../mithrax-splicing-session/code-01-extiroh-runtime-loop.rs` (verbatim,
-  `7a1a27f`). "Clean" means copied for reference; the raw archive remains the
-  evidentiary record.
+- `runtime_loop.rs` — hardened evolution of
+  `../../mithrax-splicing-session/code-01-extiroh-runtime-loop.rs` (raw archive
+  at `7a1a27f` remains immutable). Stores warm plugins as `Arc<Mutex<Plugin>>` so
+  DashMap shard guards drop before `plugin.call`, evicts poisoned plugin mutexes
+  and returns errors instead of panicking, trial-runs candidate splices on an
+  isolated fresh `Plugin` before touching `blob_store`/`warm_cells`, holds both
+  shard `Entry` guards across atomic `AtomicUsize` capacity reservation and CRDT
+  `import` before publishing (eliminating post-insert rollback races even on
+  import error or panic), and enforces race-free hard capacity limits.
+- `Cargo.toml` + `triad_shim.rs` — zero-dependency, `#![forbid(unsafe_code)]`
+  offline stdlib test crate (16 real `RwLock` shards, distinct `LoroError` ->
+  `anyhow::Error` conversion) so `RUSTFLAGS="-D warnings" cargo test` and
+  `cargo check --lib` build and verify `ExtirohCell` cleanly offline with zero
+  network downloads. Downstream production workspaces integrating external
+  `anyhow`/`dashmap`/`extism`/`iroh-blobs`/`loro` crates replace `triad_shim`
+  with the pinned crates listed below.
 
 ## The triad
 

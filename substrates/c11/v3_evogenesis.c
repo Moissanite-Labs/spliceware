@@ -139,10 +139,9 @@ static int arena_lookup(const uint8_t h[32]) {
     return -1;
 }
 
-static int arena_put(const Cell *c, uint8_t out_hash[32]) {
+static int arena_put_status(const Cell *c, uint8_t out_hash[32], bool *inserted_out) {
     uint8_t h[32];
     hash_cell(c, h);
-    if (out_hash) memcpy(out_hash, h, 32);
 
     uint32_t idx = slot_from_hash(h);
     for (uint32_t probe = 0; probe < ARENA_CAP; probe++) {
@@ -151,17 +150,23 @@ static int arena_put(const Cell *c, uint8_t out_hash[32]) {
             arena[slot] = *c;
             memcpy(names[slot], h, 32);
             occupied[slot] = 1;
+            if (out_hash) memcpy(out_hash, h, 32);
+            if (inserted_out) *inserted_out = true;
             return (int)slot;
         }
         if (memcmp(names[slot], h, 32) == 0) {
+            if (out_hash) memcpy(out_hash, h, 32);
+            if (inserted_out) *inserted_out = false;
             return (int)slot; /* Already deduplicated in RAM */
         }
     }
-    /* Evict base slot on full table */
-    arena[idx] = *c;
-    memcpy(names[idx], h, 32);
-    occupied[idx] = 1;
-    return (int)idx;
+    /* Full arena: fail closed without evicting an occupant or emitting a dangling hash */
+    if (inserted_out) *inserted_out = false;
+    return -1;
+}
+
+static int arena_put(const Cell *c, uint8_t out_hash[32]) {
+    return arena_put_status(c, out_hash, NULL);
 }
 
 /* ============================================================================
@@ -187,12 +192,14 @@ static const Cell *arena_fetch_or_gossip(const uint8_t h[32]) {
 }
 
 static void poll_network(uint8_t latest_gossip_hash[32], bool *got_new_cell) {
+    if (got_new_cell) *got_new_cell = false;
     if (udp_sock < 0) return;
     uint8_t buf[CELL_BYTES];
     struct sockaddr_in src;
     socklen_t slen = sizeof(src);
 
     while (1) {
+        slen = sizeof(src);
         ssize_t n = recvfrom(udp_sock, buf, sizeof(buf), 0, (struct sockaddr *)&src, &slen);
         if (n <= 0) break;
 
@@ -203,13 +210,13 @@ static void poll_network(uint8_t latest_gossip_hash[32], bool *got_new_cell) {
                 sendto(udp_sock, &arena[slot], CELL_BYTES, 0, (struct sockaddr *)&src, slen);
             }
         } else if (n == CELL_BYTES) {
-            /* Incoming 1,088B Cell: verify content hash implicitly via arena_put */
+            /* Incoming 1,088B Cell: hash and insert once, reporting only genuinely new inserts */
             Cell incoming;
             memcpy(&incoming, buf, CELL_BYTES);
             uint8_t h[32];
-            bool existed = (arena_lookup(h) >= 0);
-            arena_put(&incoming, h);
-            if (!existed && latest_gossip_hash && got_new_cell) {
+            bool inserted = false;
+            int slot = arena_put_status(&incoming, h, &inserted);
+            if (slot >= 0 && inserted && latest_gossip_hash && got_new_cell) {
                 memcpy(latest_gossip_hash, h, 32);
                 *got_new_cell = true;
             }
@@ -554,7 +561,7 @@ static bool sacred_splice(const Cell *parent_a, const Cell *parent_b,
     memcpy(fork_cell.right, hash_b, 32);
     set_code_len(&fork_cell, FORK_MARKER);
     uint8_t fork_hash[32];
-    arena_put(&fork_cell, fork_hash);
+    if (arena_put(&fork_cell, fork_hash) < 0) return false;
 
     /* Assemble child Cell with blended adaptive priors */
     memset(child_out, 0, sizeof(Cell));
@@ -634,6 +641,7 @@ static void build_seed_cell(Cell *c) {
     memcpy(c->body + CODE_START, imperfect_seed, sizeof(imperfect_seed));
 }
 
+#ifndef SPLICEWARE_TEST_HARNESS
 int main(int argc, char **argv) {
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <local_udp_port> [peer_udp_port]\n", argv[0]);
@@ -675,7 +683,10 @@ int main(int argc, char **argv) {
     Cell champ, ancestor_b;
     build_seed_cell(&champ);
     uint8_t champ_hash[32], ancestor_b_hash[32];
-    arena_put(&champ, champ_hash);
+    if (arena_put(&champ, champ_hash) < 0) {
+        close(udp_sock);
+        return 1;
+    }
 
     ancestor_b = champ;
     memcpy(ancestor_b_hash, champ_hash, 32);
@@ -689,6 +700,7 @@ int main(int argc, char **argv) {
     uint8_t entropy[32];
     uint64_t seed_state[2] = { (uint64_t)time(NULL), (uint64_t)getpid() };
     arx_256(seed_state, sizeof(seed_state), entropy);
+    bool arena_full_logged = false;
 
     for (uint64_t gen = 1; ; gen++) {
         /* 1. Poll UDP socket for cache-miss requests & migrant cells */
@@ -748,25 +760,30 @@ int main(int argc, char **argv) {
              *   Tier 2: 4/4 anchors (or strictly better anchor score) promotes to champ */
             if (cand_anchors >= 3) {
                 uint8_t cand_hash[32];
-                arena_put(&candidate, cand_hash);
+                if (arena_put(&candidate, cand_hash) >= 0) {
+                    if (strictly_better && (cand_anchors == 4 || cand_anchors > champ_anchors)) {
+                        ancestor_b = champ;
+                        memcpy(ancestor_b_hash, champ_hash, 32);
 
-                if (strictly_better && (cand_anchors == 4 || cand_anchors > champ_anchors)) {
-                    ancestor_b = champ;
-                    memcpy(ancestor_b_hash, champ_hash, 32);
+                        champ = candidate;
+                        memcpy(champ_hash, cand_hash, 32);
+                        champ_anchors = cand_anchors;
+                        champ_err = cand_err;
 
-                    champ = candidate;
-                    memcpy(champ_hash, cand_hash, 32);
-                    champ_anchors = cand_anchors;
-                    champ_err = cand_err;
-
-                    /* Broadcast newly crowned champion to peer */
-                    if (has_peer) {
-                        sendto(udp_sock, &champ, CELL_BYTES, 0,
-                               (struct sockaddr *)&peer_addr, sizeof(peer_addr));
+                        /* Broadcast newly crowned champion to peer */
+                        if (has_peer) {
+                            sendto(udp_sock, &champ, CELL_BYTES, 0,
+                                   (struct sockaddr *)&peer_addr, sizeof(peer_addr));
+                        }
+                    } else {
+                        ancestor_b = candidate;
+                        memcpy(ancestor_b_hash, cand_hash, 32);
                     }
-                } else {
-                    ancestor_b = candidate;
-                    memcpy(ancestor_b_hash, cand_hash, 32);
+                } else if (!arena_full_logged) {
+                    fprintf(stderr,
+                            "[gen=%llu] arena full (%d/%d); refusing overwrite (fail-closed)\n",
+                            (unsigned long long)gen, ARENA_CAP, ARENA_CAP);
+                    arena_full_logged = true;
                 }
             }
         }
@@ -788,3 +805,4 @@ int main(int argc, char **argv) {
     close(udp_sock);
     return 0;
 }
+#endif

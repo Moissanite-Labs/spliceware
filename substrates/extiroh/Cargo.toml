@@ -1,0 +1,9 @@
+[package]
+name = "extiroh"
+version = "0.1.0"
+edition = "2021"
+description = "Extiroh Rust/Wasm Organ Triad runtime loop and zero-dependency offline concurrency/retention regression crate"
+
+[lib]
+name = "extiroh"
+path = "runtime_loop.rs"
