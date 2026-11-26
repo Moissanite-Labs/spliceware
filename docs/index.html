@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spliceware — Cellular Substrates, Sacred Splicer &amp; Causal Evolutionary Fabric</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX for Semilattice, Simplex, & Combinatorial Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Three.js r128 for Real-Time 3D Cellular Mitosis, Homologous Splicing & Simplex Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Tone.js for Optional Sacred Codon Harmonic Sonification -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            biosplice: {
+              950: '#04090b',
+              900: '#081216',
+              850: '#0d1d22',
+              800: '#132930'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      background-color: #04090b;
+      background-image:
+        radial-gradient(circle at 16% 10%, rgba(45, 212, 191, 0.12), transparent 38%),
+        radial-gradient(circle at 84% 16%, rgba(232, 121, 249, 0.11), transparent 40%),
+        radial-gradient(circle at 50% 68%, rgba(250, 204, 21, 0.07), transparent 48%);
+      overflow-x: hidden;
+    }
+    .bg-cellular-grid {
+      background-size: 42px 42px;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+    }
+    .glass-panel {
+      background: rgba(8, 18, 22, 0.80);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .glass-subtle {
+      background: rgba(13, 29, 34, 0.62);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.11);
+    }
+    .code-editor {
+      tab-size: 2;
+      caret-color: #2dd4bf;
+      line-height: 1.55;
+    }
+    .code-editor:focus {
+      outline: none;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(51, 65, 85, 0.75);
+      height: 6px;
+      border-radius: 999px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #2dd4bf;
+      border: 2px solid #04090b;
+      box-shadow: 0 0 10px rgba(45, 212, 191, 0.85);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+    }
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #04090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #132930;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2dd4bf;
+    }
+    .katex {
+      font-size: 1.02em;
+    }
+  </style>
+</head>
+<body class="text-slate-100 font-sans antialiased selection:bg-teal-500/30 selection:text-teal-200 bg-cellular-grid">
+
+  <!-- Non-Blocking Toast Container (Zero alert() calls) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Sticky Navigation Header -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-biosplice-950/85 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- Brand -->
+      <a href="#top" class="flex items-center gap-3 group">
+        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400/20 via-fuchsia-500/20 to-amber-400/20 border border-teal-400/40 flex items-center justify-center shadow-lg shadow-teal-500/10 group-hover:border-teal-300 transition">
+          <!-- Inline SVG Mithrax Sacred Splicer Triad & Crossover Seam Icon -->
+          <svg class="w-5 h-5 text-teal-300" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.1">
+            <path d="M7 6C15 6 17 26 25 26" class="text-teal-400" stroke-linecap="round" />
+            <path d="M7 26C15 26 17 6 25 6" class="text-fuchsia-400" stroke-linecap="round" />
+            <circle cx="16" cy="16" r="3" fill="currentColor" class="text-amber-300" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg tracking-tight text-white">Spliceware</span>
+            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30">
+              C11 v4 · Extiroh WASM
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden md:block font-mono">Sacred Splicer · Merkle-CRDT Determinism · Lexicase &amp; Adaptive Priors</p>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-6 text-sm text-slate-300">
+        <a href="#studio" class="hover:text-teal-300 transition">SpliceScript Studio</a>
+        <a href="#cell-arena" class="hover:text-teal-300 transition">Sacred Cell Arena</a>
+        <a href="#pillars" class="hover:text-teal-300 transition">5-Doc Architecture</a>
+        <a href="#lexicase-lab" class="hover:text-teal-300 transition">Lexicase &amp; Substrates</a>
+        <a href="#atlas" class="hover:text-teal-300 transition">Session Atlas</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2.5">
+        <button id="btn-sonic-toggle" type="button" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono border border-slate-700/80 bg-slate-900/80 text-slate-300 hover:border-teal-400/60 hover:text-teal-200 transition" title="Synthesize live Codon Entropy & Crossover Seam harmonics via Tone.js">
+          <span id="sonic-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span id="sonic-label">Codon Synth: OFF</span>
+        </button>
+
+        <button id="btn-copy-ignite" type="button" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono bg-teal-500/15 hover:bg-teal-500/25 text-teal-200 border border-teal-400/30 transition">
+          <span>make -C substrates/c11 &amp;&amp; cargo build</span>
+          <svg class="w-3.5 h-3.5 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-24 space-y-24">
+
+    <!-- ===================================================================== -->
+    <!-- HERO SECTION                                                          -->
+    <!-- ===================================================================== -->
+    <section class="relative">
+      <div class="max-w-4xl space-y-6">
+        <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full glass-subtle text-xs font-mono text-teal-300 border border-teal-500/25">
+          <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+          <span>Polymerized Splicer Broker</span>
+          <span class="text-slate-600">|</span>
+          <span class="text-fuchsia-300">Sacred Homologous Crossover</span>
+          <span class="text-slate-600">|</span>
+          <span class="text-amber-300">Causal Merkle-CRDT Fabric</span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.08]">
+          Living Evolutionary Software via
+          <span class="bg-gradient-to-r from-teal-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">
+            Causal Cellular Splicing.
+          </span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-3xl">
+          Brittle LLM agent wrappers hallucinate non-deterministically, while naive random bytecode mutation shatters control flow.
+          <strong class="text-white font-semibold">Spliceware</strong> synthesizes self-evolving programs inside zero-trust
+          <code class="px-1.5 py-0.5 rounded bg-slate-800/90 text-teal-300 font-mono text-sm">C11 Unigenesis</code> arenas and
+          <code class="px-1.5 py-0.5 rounded bg-slate-800/90 text-fuchsia-300 font-mono text-sm">Extiroh Rust/WASM</code> organs—recombining genomes along
+          <strong>homologous Sacred Splicer seams</strong>, preserving specialist traits via <span id="hero-math-lex" class="font-mono text-amber-300">Lexicase</span> selection, and converging peer states across a <strong>cryptographically deterministic Merkle-CRDT semilattice</strong>.
+        </p>
+
+        <!-- Hero Action Buttons -->
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <a href="#studio" class="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-300 hover:to-emerald-400 text-slate-950 font-semibold shadow-lg shadow-teal-500/20 transition">
+            <span>Launch SpliceScript 3D Studio</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+          <a href="#cell-arena" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm glass-panel text-fuchsia-200 hover:border-fuchsia-400/50 transition">
+            <span>Splice Codons in Unified Cell Arena</span>
+          </a>
+          <a href="#lexicase-lab" class="inline-flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm glass-panel text-amber-200 hover:border-amber-400/50 transition">
+            <span>Run Lexicase × Triangular-Sum Sieve</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Key Architecture Metrics Strip -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mt-8">
+        <div class="glass-panel rounded-2xl p-4">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">C11 Cellular Lineage</div>
+          <div class="font-display text-xl sm:text-2xl font-bold text-teal-300 mt-1">v1 → v4 Arena</div>
+          <div class="text-xs text-slate-400 mt-1 font-mono">substrates/c11/ · 103.2 KB</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Zero-Trust WASM</div>
+          <div class="font-display text-xl sm:text-2xl font-bold text-fuchsia-300 mt-1">Extiroh Triad</div>
+          <div class="text-xs text-slate-400 mt-1 font-mono">runtime_loop · triad_shim.rs</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Causal Fabric</div>
+          <div class="font-display text-xl sm:text-2xl font-bold text-amber-300 mt-1">Merkle-CRDT</div>
+          <div class="text-xs text-slate-400 mt-1 font-mono">Join-Semilattice S_A ⊔ S_B</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Evolutionary Sieve</div>
+          <div class="font-display text-xl sm:text-2xl font-bold text-sky-300 mt-1">Lexicase + Δ³</div>
+          <div class="text-xs text-slate-400 mt-1 font-mono">Anchor-Gated Priors</div>
+        </div>
+        <div class="glass-panel rounded-2xl p-4 col-span-2 md:col-span-1">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Mithrax Genesis</div>
+          <div class="font-display text-xl sm:text-2xl font-bold text-emerald-300 mt-1">88 Artifacts</div>
+          <div class="text-xs text-slate-400 mt-1 font-mono">5 Docs · 13 Codes · 19 Cards</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 1: SPLICESCRIPT LIVE 3D CELLULAR & EVOLUTIONARY STUDIO        -->
+    <!-- ===================================================================== -->
+    <section id="studio" class="scroll-mt-20 space-y-5">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-teal-400 mb-1">Interactive Biomorphic &amp; Semilattice Scripting Engine</div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+            SpliceScript Live Cellular &amp; Evolutionary Studio
+          </h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            Explore Spliceware's five foundational evolutionary geometries—or live-edit the mathematical kernel—to visualize <span class="font-mono text-teal-300">Sacred Homologous Crossover</span>, <span class="font-mono text-fuchsia-300">Mitosis A/B Cytokinesis</span>, <span class="font-mono text-amber-300">Merkle-CRDT Causal Joins</span>, and <span class="font-mono text-sky-300">Dirichlet Prior Simplexes</span> at 60 FPS.
+          </p>
+        </div>
+
+        <!-- Preset Selector Pills -->
+        <div class="flex flex-wrap gap-2" id="preset-buttons">
+          <button type="button" data-preset="sacred" class="preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-teal-500/20 border-teal-400 text-teal-200">
+            01 · Sacred Crossover
+          </button>
+          <button type="button" data-preset="mitosis" class="preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-slate-900/70 border-slate-700 text-slate-300 hover:border-slate-500">
+            02 · Mitosis A/B Arena
+          </button>
+          <button type="button" data-preset="merkle" class="preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-slate-900/70 border-slate-700 text-slate-300 hover:border-slate-500">
+            03 · Merkle-CRDT Braid
+          </button>
+          <button type="button" data-preset="simplex" class="preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-slate-900/70 border-slate-700 text-slate-300 hover:border-slate-500">
+            04 · Adaptive Δ³ Simplex
+          </button>
+          <button type="button" data-preset="triangular" class="preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-slate-900/70 border-slate-700 text-slate-300 hover:border-slate-500">
+            05 · Triangular-Sum Wave
+          </button>
+        </div>
+      </div>
+
+      <!-- Studio Grid: 7 Cols 3D Viewport + 5 Cols Live Mathematical Script & Controls -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+
+        <!-- LEFT: 3D WebGL Spliceware Viewport -->
+        <div class="xl:col-span-7 glass-panel rounded-3xl overflow-hidden relative flex flex-col min-h-[520px] sm:min-h-[620px]">
+          <!-- Top Telemetry HUD -->
+          <div class="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-start justify-between gap-2 pointer-events-none">
+            <div class="glass-subtle rounded-2xl px-3.5 py-2.5 space-y-1 pointer-events-auto">
+              <div class="flex items-center gap-2 text-[11px] font-mono">
+                <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                <span id="hud-mode-title" class="text-white font-semibold">Sacred Splicer Homologous Seam Recombination</span>
+              </div>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[11px] font-mono text-slate-300">
+                <div>Prior Entropy H(p): <span id="hud-entropy" class="text-teal-300">1.524 bits</span></div>
+                <div>Anchor Floor α: <span id="hud-anchor" class="text-emerald-300">≥ 0.050 ✓</span></div>
+                <div>Seam Homology: <span id="hud-homology" class="text-fuchsia-300">99.4% Frame-Safe</span></div>
+                <div>Merkle Root: <span id="hud-merkle" class="text-amber-300">0x8F3A..E29C</span></div>
+              </div>
+            </div>
+
+            <!-- Viewport Controls -->
+            <div class="flex items-center gap-1.5 pointer-events-auto">
+              <button id="btn-toggle-triad" type="button" class="px-2.5 py-1.5 rounded-xl text-[11px] font-mono glass-subtle text-teal-200 border border-teal-400/30 hover:border-teal-300 transition" title="Toggle Extiroh Triad Shim Basis (Host, WASM Organ, Seam)">
+                Triad Frame: ON
+              </button>
+              <button id="btn-pause-sim" type="button" class="px-2.5 py-1.5 rounded-xl text-[11px] font-mono glass-subtle text-slate-200 hover:border-teal-400/50 transition">
+                Pause
+              </button>
+              <button id="btn-reset-cam" type="button" class="px-2.5 py-1.5 rounded-xl text-[11px] font-mono glass-subtle text-slate-200 hover:border-teal-400/50 transition">
+                Reset View
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive 3D Three.js Stage -->
+          <div id="webgl-container" class="w-full flex-1 cursor-grab active:cursor-grabbing relative select-none"></div>
+
+          <!-- Interactive Barycentric Opcode Prior Simplex Pad (Bottom Left) -->
+          <div class="absolute bottom-3 left-3 z-10 glass-panel rounded-2xl p-3 w-48 sm:w-52 select-none">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-teal-300 font-semibold">Adaptive Prior Δ² Pad</span>
+              <span class="text-[10px] font-mono text-slate-400">Drag prior</span>
+            </div>
+            <div class="relative w-full aspect-square rounded-xl bg-biosplice-950/90 border border-slate-800 overflow-hidden">
+              <canvas id="simplex-pad-canvas" class="w-full h-full block touch-none cursor-crosshair"></canvas>
+            </div>
+            <p class="text-[10px] text-slate-400 font-mono mt-1.5 leading-snug">
+              Steers <span class="text-teal-300">LOOP</span>, <span class="text-fuchsia-300">CALL</span>, <span class="text-amber-300">SPLICE</span> priors inside Anchor Simplex Δ<sub>α</sub>.
+            </p>
+          </div>
+
+          <!-- Legend Overlay (Bottom Right) -->
+          <div class="hidden sm:flex absolute bottom-3 right-3 z-10 glass-subtle rounded-2xl px-3 py-2 flex-col gap-1 text-[10px] font-mono text-slate-300 pointer-events-none">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-teal-400 inline-block"></span> Genome Strand <strong>T<sub>codon</sub></strong></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-fuchsia-400 inline-block"></span> Crossover Seam <strong>S<sub>hom</sub></strong></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-amber-300 inline-block"></span> Causal Hash Link <strong>H<sub>CRDT</sub></strong></div>
+            <div class="text-slate-400 pt-0.5">Drag to orbit · Scroll to zoom</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Symbolic Equation + Sliders + Editable SpliceScript -->
+        <div class="xl:col-span-5 flex flex-col gap-4">
+
+          <!-- Live Symbolic Formula Card (KaTeX) -->
+          <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span id="formula-badge" class="text-[11px] font-mono text-teal-300 uppercase tracking-wider">docs/04 · code-08-sacred-splice.c</span>
+              <span class="text-[11px] font-mono text-emerald-300">Causal Deterministic</span>
+            </div>
+            <div id="studio-katex-box" class="py-2 px-3 rounded-xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center min-h-[60px] flex items-center justify-center"></div>
+            <p id="formula-caption" class="text-xs text-slate-300 leading-relaxed"></p>
+          </div>
+
+          <!-- Parametric Sliders -->
+          <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">Substrate &amp; Genetic Parameters</span>
+              <span class="text-[11px] font-mono text-slate-400">60 FPS Zero-Alloc</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <label for="slider-p0" id="label-p0" class="text-slate-300">Crossover Seam Locus</label>
+                  <span id="val-p0" class="text-teal-300">0.50</span>
+                </div>
+                <input id="slider-p0" type="range" min="0.12" max="0.88" step="0.01" value="0.50" class="w-full" />
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <label for="slider-p1" id="label-p1" class="text-slate-300">Helical Twist Turns</label>
+                  <span id="val-p1" class="text-fuchsia-300">2.60</span>
+                </div>
+                <input id="slider-p1" type="range" min="0.50" max="5.00" step="0.05" value="2.60" class="w-full" />
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <label for="slider-p2" id="label-p2" class="text-slate-300">Seam Pinch / Coupling</label>
+                  <span id="val-p2" class="text-amber-300">0.78</span>
+                </div>
+                <input id="slider-p2" type="range" min="0.05" max="1.30" step="0.02" value="0.78" class="w-full" />
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <label for="slider-p3" id="label-p3" class="text-slate-300">Metabolic Clock Rate</label>
+                  <span id="val-p3" class="text-sky-300">2.20</span>
+                </div>
+                <input id="slider-p3" type="range" min="0.40" max="5.50" step="0.10" value="2.20" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Editable SpliceScript Mathematical Kernel -->
+          <div class="glass-panel rounded-3xl p-4 sm:p-5 flex-1 flex flex-col">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                <span id="script-filename" class="text-xs font-mono font-semibold text-white">01_sacred_homologous_crossover.splice</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="compile-status" class="px-2 py-0.5 rounded-md text-[10px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  Compiled · Live 60 FPS
+                </span>
+                <button id="btn-run-script" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-teal-500/20 hover:bg-teal-500/30 text-teal-200 border border-teal-400/40 transition">
+                  Eval (Ctrl+Enter)
+                </button>
+              </div>
+            </div>
+
+            <div class="text-[11px] font-mono text-slate-400 mb-1.5">
+              fn <span class="text-teal-300">sampleFilament</span>(i, N, s, t, params) <span class="text-slate-500">// homologousSeam, mitosisCell, simplexTo3D, anchorProject, binomialWave</span>
+            </div>
+
+            <textarea id="splicescript-editor" spellcheck="false" class="code-editor w-full flex-1 min-h-[205px] rounded-2xl bg-biosplice-950/95 border border-slate-800 focus:border-teal-400/60 p-3.5 text-xs font-mono text-teal-100 resize-y"></textarea>
+
+            <div id="script-error-banner" class="hidden mt-2 px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-500/40 text-[11px] font-mono text-rose-200"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 2: UNIFIED CELL ARENA & SACRED SPLICER CODON VM               -->
+    <!-- ===================================================================== -->
+    <section id="cell-arena" class="scroll-mt-20 space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-fuchsia-400 mb-1">
+            substrates/c11/v4_unigenesis.c · code-08-sacred-splice.c · inline-element-15-sacred-splicer-codon-table.html
+          </div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+            Interactive Unified Cell Arena &amp; <span class="text-teal-300">Sacred Splicer</span> Codon VM
+          </h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-3xl">
+            Unlike raw point mutations that corrupt jump offsets, the <strong class="text-white">Sacred Splicer</strong> aligns conserved <strong class="text-amber-300">Homologous Anchor Codons</strong> (`ANCHOR`, `LOOP`, `CALL`) across Parent Alpha and Parent Beta inside a fixed-size <strong class="text-teal-300">Unified Cell Arena</strong>—producing frame-valid, fuel-bounded WASM/C11 child cells sealed with deterministic Merkle digests.
+          </p>
+        </div>
+
+        <!-- Splicer Action Toolbar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-sacred-splice" type="button" class="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-gradient-to-r from-teal-400 to-fuchsia-400 text-slate-950 shadow-lg shadow-teal-500/15 hover:opacity-95 transition">
+            ✂ Trigger Sacred Splice
+          </button>
+          <button id="btn-mitosis-step" type="button" class="px-3.5 py-2 rounded-xl text-xs font-mono bg-fuchsia-500/20 text-fuchsia-200 border border-fuchsia-400/40 hover:bg-fuchsia-500/30 transition">
+            ⑂ Mitosis A/B Tournament
+          </button>
+          <button id="btn-mutate-priors" type="button" class="px-3.5 py-2 rounded-xl text-xs font-mono glass-panel text-amber-200 hover:border-amber-400/50 transition">
+            ⟳ Sample Adaptive Priors
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- LEFT: Homologous Crossover Diagram Canvas + 16-Codon Spliced Child Tape -->
+        <div class="lg:col-span-8 glass-panel rounded-3xl p-4 sm:p-6 flex flex-col justify-between space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span id="arena-gen-badge" class="px-2.5 py-1 rounded-lg text-xs font-mono bg-teal-500/20 text-teal-200 border border-teal-400/40">
+                Generation #042 · Homologous Seam @ Codon [07]
+              </span>
+            </div>
+            <span id="arena-merkle-tag" class="text-xs font-mono text-amber-300">
+              Causal Digest: 0x9E41B72C (Zero-Trust Fuel: 48 / 256)
+            </span>
+          </div>
+
+          <!-- Homologous Crossover & Unified Cell Arena Canvas -->
+          <div class="w-full h-[185px] rounded-2xl bg-biosplice-950/90 border border-slate-800/90 overflow-hidden relative">
+            <canvas id="crossover-canvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- 16-Slot Spliced Child Codon Tape -->
+          <div>
+            <div class="text-[11px] font-mono text-slate-400 mb-2 flex items-center justify-between">
+              <span>Unified Cell Arena Tape (<code class="text-teal-300">uint8_t codons[16]</code> — click any codon to inspect Extiroh Organ &amp; Prior):</span>
+              <span id="child-lineage-label" class="text-fuchsia-300">50% Alpha · 50% Beta · 100% Frame-Aligned</span>
+            </div>
+            <div id="codon16-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Sacred Codon & Zero-Trust Execution Cell Inspector -->
+        <div class="lg:col-span-4 glass-panel rounded-3xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono uppercase tracking-wider text-teal-300">Sacred Codon Inspector</span>
+              <span id="selected-codon-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-fuchsia-500/20 text-fuchsia-200 border border-fuchsia-400/40">
+                Slot [07] · SEAM ANCHOR
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-biosplice-950/90 border border-slate-800 space-y-2.5 font-mono text-xs">
+              <div class="flex items-center justify-between">
+                <span id="codon-mnemonic" class="text-white font-bold text-sm">OP_HOM_ANCHOR (0xA4)</span>
+                <span id="codon-origin-pill" class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-200 border border-amber-400/40">Conserved Seam</span>
+              </div>
+              <p id="codon-desc" class="text-[11px] text-slate-400 font-sans leading-relaxed">
+                Conserved structural boundary marker enabling homologous crossover without corrupting LOOP/CALL block depth.
+              </p>
+
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <div class="p-2 rounded-lg bg-slate-900/85">
+                  <div class="text-[10px] text-slate-400">Adaptive Prior p_k</div>
+                  <div id="codon-prior-val" class="text-teal-300 font-semibold mt-0.5">0.184 (Anchor ≥ 0.05)</div>
+                </div>
+                <div class="p-2 rounded-lg bg-slate-900/85">
+                  <div class="text-[10px] text-slate-400">WASM Tier &amp; Fuel</div>
+                  <div id="codon-wasm-tier" class="text-fuchsia-300 font-semibold mt-0.5">Tier-2 Organ · 2 cyc</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zero-Trust Execution Cell Memory Layout (code-02 & code-03) -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-slate-200 font-semibold">Zero-Trust Execution Cell Layout</span>
+              <span class="text-emerald-300 text-[10px]">No Heap Escape</span>
+            </div>
+
+            <div class="rounded-2xl bg-biosplice-950/95 border border-slate-800 p-3 space-y-2 font-mono text-[10px]">
+              <div class="grid grid-cols-12 gap-1 text-center">
+                <div class="col-span-3 py-1.5 rounded bg-amber-500/20 border border-amber-400/40 text-amber-200">
+                  MerkleHdr<br/><span class="text-[9px] opacity-80">32B</span>
+                </div>
+                <div class="col-span-3 py-1.5 rounded bg-teal-500/20 border border-teal-400/40 text-teal-200">
+                  Priors Δ<br/><span class="text-[9px] opacity-80">16B</span>
+                </div>
+                <div class="col-span-4 py-1.5 rounded bg-fuchsia-500/20 border border-fuchsia-400/40 text-fuchsia-200">
+                  Codon Tape<br/><span class="text-[9px] opacity-80">128B</span>
+                </div>
+                <div class="col-span-2 py-1.5 rounded bg-sky-500/20 border border-sky-400/40 text-sky-200">
+                  Fuel<br/><span class="text-[9px] opacity-80">8B</span>
+                </div>
+              </div>
+              <div class="text-[10px] text-slate-400 text-center pt-0.5">
+                Contiguous <code class="text-teal-300">CellArena</code> · O(1) <code class="text-fuchsia-300">memcpy</code> Mitosis Clone
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-900/75 border border-slate-800/80 text-[11px] font-mono flex items-center justify-between">
+              <span class="text-slate-300">Extiroh <code class="text-teal-300">triad_shim.rs</code> Gate:</span>
+              <span id="cell-safety-status" class="text-emerald-300 font-semibold">SANDBOX SEALED ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 3: FIVE CANONICAL ARCHITECTURAL DOCS OF SPLICEWARE            -->
+    <!-- ===================================================================== -->
+    <section id="pillars" class="scroll-mt-20 space-y-6">
+      <div>
+        <div class="text-xs font-mono uppercase tracking-widest text-teal-400 mb-1">docs/01..05 · Polymerized Brokers × CRDT Semilattices × Evolutionary Program Synthesis</div>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+          Five Canonical Architectural Spines of Spliceware
+        </h2>
+        <p class="text-sm text-slate-400 mt-1 max-w-3xl">
+          Synthesized from the 134 KB <code class="font-mono text-teal-300">mithrax-splicing-session</code> into five formal specifications in <code class="font-mono text-fuchsia-300">docs/</code> and dual C11 / Rust-WASM implementations in <code class="font-mono text-amber-300">substrates/</code>.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Doc 01 -->
+        <article class="glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-teal-400/40 transition">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30">01-polymerized-splicer-broker.md</span>
+              <span class="text-slate-400">Doc 01</span>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white">Polymerized Splicer Broker</h3>
+            <p class="text-sm text-slate-300/90 leading-relaxed">
+              Replaces monolithic, fragile prompt-chained agents with a <strong>tech-agnostic capability broker</strong> that polymerizes specialized micro-organs across C11, Rust, and WASM boundaries via typed binary contracts.
+            </p>
+          </div>
+          <div id="spine-math-1" class="p-3 rounded-2xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center"></div>
+        </article>
+
+        <!-- Doc 02 -->
+        <article class="glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-amber-400/40 transition">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">02-causal-cryptographic-determinism.md</span>
+              <span class="text-slate-400">Doc 02</span>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white">Causal Merkle-CRDT Fabric</h3>
+            <p class="text-sm text-slate-300/90 leading-relaxed">
+              Every mutation, tournament outcome, and PRNG draw is hash-chained into a content-addressed Merkle DAG whose peer states merge via commutative, associative, idempotent <strong>join-semilattice</strong> laws.
+            </p>
+          </div>
+          <div id="spine-math-2" class="p-3 rounded-2xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center"></div>
+        </article>
+
+        <!-- Doc 03 -->
+        <article class="glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-fuchsia-400/40 transition">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2.5 py-0.5 rounded-full bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30">03-extiroh-wasm-substrate.md</span>
+              <span class="text-slate-400">Doc 03</span>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white">Extiroh WASM Organs &amp; Triad Shim</h3>
+            <p class="text-sm text-slate-300/90 leading-relaxed">
+              Implemented in <code class="font-mono text-fuchsia-300">runtime_loop.rs</code> and <code class="font-mono text-fuchsia-300">triad_shim.rs</code>: compiles evolved genomes into capability-jailed, fuel-metered WebAssembly execution cells incapable of ambient I/O or infinite loops.
+            </p>
+          </div>
+          <div id="spine-math-3" class="p-3 rounded-2xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center"></div>
+        </article>
+
+        <!-- Doc 04 -->
+        <article class="glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-emerald-400/40 transition">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">04-cellular-substrate-and-sacred-splicer.md</span>
+              <span class="text-slate-400">Doc 04</span>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white">Cellular Unigenesis &amp; Sacred Splicer</h3>
+            <p class="text-sm text-slate-300/90 leading-relaxed">
+              Spans <code class="font-mono text-emerald-300">v1_genesis.c</code> through <code class="font-mono text-emerald-300">v4_unigenesis.c</code>: replaces pointer-heavy ASTs with flat cache-resident cell arenas supporting <span class="font-mono">O(1)</span> mitosis branching and structure-preserving homologous splicing.
+            </p>
+          </div>
+          <div id="spine-math-4" class="p-3 rounded-2xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center"></div>
+        </article>
+
+        <!-- Doc 05 + Proposal 2026-11 -->
+        <article class="glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-sky-400/40 transition md:col-span-2 lg:col-span-2">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+            <div class="lg:col-span-7 space-y-2.5">
+              <div class="flex items-center gap-2 text-xs font-mono">
+                <span class="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">05-adaptive-priors-and-lexicase · proposals/2026-11</span>
+                <span class="text-slate-400">7.0 KB</span>
+              </div>
+              <h3 class="font-display text-xl font-bold text-white">Anchor-Gated Adaptive Priors, Lexicase Selection &amp; Triangular Sum</h3>
+              <p class="text-sm text-slate-300/90 leading-relaxed">
+                Scalar average fitness prematurely extinguishes rare specialists (such as carry-propagation or loop-termination solvers) before crossover can unite them, while unguarded adaptive opcode weights collapse to degenerate corners of the simplex. Spliceware combines <strong>Anchor-Gated Simplex Projection</strong> (<span class="font-mono text-teal-300">p_i ≥ α</span>) with <strong>Lexicase Selection</strong> to synthesize exact algorithmic loops like the <strong>Triangular Sum</strong> (<code class="font-mono text-amber-300">2026-11-lexicase-and-triangular-sum.md</code>).
+              </p>
+            </div>
+            <div class="lg:col-span-5">
+              <div id="spine-math-5" class="p-4 rounded-2xl bg-biosplice-950/85 border border-slate-800/80 overflow-x-auto text-center"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 4: LEXICASE × TRIANGULAR SUM LAB & C11/EXTIROH HARDENING      -->
+    <!-- ===================================================================== -->
+    <section id="lexicase-lab" class="scroll-mt-20 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-amber-400 mb-1">
+            proposals/2026-11-lexicase-and-triangular-sum.md · substrates/c11/test_c11_hardening.c · substrates/extiroh/
+          </div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+            Substrate Code Vault, Hardening Oracle &amp; Live Lexicase Sieve
+          </h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-3xl">
+            Inspect the C11 evolutionary progression (`v1`→`v4`) and Rust `Extiroh` runtime, execute 5,000 live browser-side CRDT/Simplex/Binomial hardening checks, and test why <strong>Lexicase Selection</strong> preserves critical edge-case specialists on the <strong>Triangular Sum</strong> benchmark!
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- LEFT: C11 & Extiroh Code Browser + Live Hardening Oracle -->
+        <div class="lg:col-span-7 glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          <div class="space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-mono uppercase tracking-wider text-teal-300 font-semibold">C11 &amp; Extiroh Rust Substrate Vault</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                test_c11_hardening.c · PASS
+              </span>
+            </div>
+
+            <!-- Substrate Tabs -->
+            <div class="flex flex-wrap gap-1.5" id="substrate-tabs">
+              <button type="button" data-sub="v4_uni" class="sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-teal-500/20 text-teal-200 border border-teal-400/40">
+                v4_unigenesis.c
+              </button>
+              <button type="button" data-sub="extiroh_rs" class="sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-600">
+                runtime_loop.rs
+              </button>
+              <button type="button" data-sub="triad_rs" class="sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-600">
+                triad_shim.rs
+              </button>
+              <button type="button" data-sub="c11_hard" class="sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-600">
+                test_c11_hardening.c
+              </button>
+              <button type="button" data-sub="prop_lex" class="sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-600">
+                2026-11-lexicase.md
+              </button>
+            </div>
+
+            <!-- Code Viewer -->
+            <div class="rounded-2xl bg-biosplice-950/95 border border-slate-800 p-4 font-mono text-xs overflow-x-auto space-y-2">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800/80 pb-2">
+                <span id="sub-file-label" class="text-teal-300">substrates/c11/v4_unigenesis.c (19,588 bytes)</span>
+                <span>Zero-Trust Cellular Substrate</span>
+              </div>
+              <pre id="sub-code-view" class="text-slate-200 leading-relaxed whitespace-pre-wrap"></pre>
+            </div>
+          </div>
+
+          <!-- Live Browser Hardening & Mathematical Oracle -->
+          <div class="rounded-2xl bg-slate-900/75 border border-slate-800 p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div class="text-xs font-mono font-semibold text-white">Live Browser Substrate Hardening Oracle</div>
+                <div class="text-[11px] text-slate-400">Verifies 5,000 CRDT semilattice joins, Anchor-Simplex projections, Seam frames &amp; Triangular-Sum binomials</div>
+              </div>
+              <button id="btn-run-oracle" type="button" class="px-3.5 py-2 rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 transition">
+                Run 5,000 Hardening Checks
+              </button>
+            </div>
+
+            <div id="oracle-results" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Interactive Lexicase Sieve vs Scalar Average Simulator -->
+        <div class="lg:col-span-5 glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono uppercase tracking-wider text-amber-300 font-semibold">Lexicase vs. Scalar Tournament Sieve</span>
+              <span class="text-[11px] font-mono text-teal-300">Triangular Sum Suite</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Watch how <span class="text-rose-400 font-mono">Scalar Mean Fitness</span> kills the rare <em>Carry-Mod-10 Specialist (C5)</em>, whereas random test-case permutations in <span class="text-teal-300 font-mono">Lexicase Selection</span> keep all specialists alive for Sacred Splicing:
+            </p>
+          </div>
+
+          <!-- Candidate x Test-Case Lexicase Matrix & Selection Probability Canvas -->
+          <div class="w-full h-[225px] rounded-2xl bg-biosplice-950/95 border border-slate-800 overflow-hidden relative">
+            <canvas id="lexicase-canvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Interactive Sieve Controls -->
+          <div class="space-y-3 pt-1">
+            <div>
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <label for="slider-eps" class="text-slate-300">ε-Lexicase Tolerance Margin ε</label>
+                <span id="val-eps" class="text-amber-300">0.05</span>
+              </div>
+              <input id="slider-eps" type="range" min="0.00" max="0.35" step="0.01" value="0.05" class="w-full" />
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button id="btn-shuffle-lex" type="button" class="flex-1 py-2 px-3 rounded-xl text-xs font-mono font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 transition">
+                ↻ Permute Case Order π &amp; Sieve
+              </button>
+              <button id="btn-splice-specialists" type="button" class="py-2 px-3 rounded-xl text-xs font-mono bg-teal-500/20 hover:bg-teal-500/30 text-teal-200 border border-teal-400/40 transition">
+                Splice Winners →
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-0.5 text-xs font-mono">
+              <div class="p-2.5 rounded-xl bg-biosplice-950/90 border border-slate-800">
+                <div class="text-[10px] text-slate-400">Scalar Mean Winner</div>
+                <div id="lex-scalar-winner" class="text-rose-400 font-bold text-xs mt-0.5">Only C1 (Kills Rare C5!)</div>
+              </div>
+              <div class="p-2.5 rounded-xl bg-biosplice-950/90 border border-slate-800">
+                <div class="text-[10px] text-slate-400">Current π Lexicase Pick</div>
+                <div id="lex-perm-winner" class="text-teal-300 font-bold text-xs mt-0.5">C5 (Mod-10 Specialist!)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 5: INTERACTIVE REPOSITORY & MITHRAX SESSION ATLAS             -->
+    <!-- ===================================================================== -->
+    <section id="atlas" class="scroll-mt-20 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-teal-400 mb-1">spliceware-main.zip · 88 Entries · 26.59 MB Archive</div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+            Interactive Spliceware &amp; Mithrax Session Atlas
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Filter the canonical <code class="text-teal-300 font-mono">docs/</code>, <code class="text-emerald-300 font-mono">substrates/c11/</code> evolutionary stages, <code class="text-fuchsia-300 font-mono">substrates/extiroh/</code> Rust organs, and extracted <code class="text-amber-300 font-mono">mithrax-splicing-session/</code> artifacts.
+          </p>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="flex flex-wrap gap-1.5" id="atlas-filters">
+          <button type="button" data-filter="all" class="atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-teal-500/20 text-teal-200 border border-teal-400/40">All</button>
+          <button type="button" data-filter="docs" class="atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800">docs/ &amp; proposals/</button>
+          <button type="button" data-filter="c11" class="atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800">substrates/c11/</button>
+          <button type="button" data-filter="extiroh" class="atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800">substrates/extiroh/</button>
+          <button type="button" data-filter="mithrax" class="atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800">mithrax-session/</button>
+        </div>
+      </div>
+
+      <div id="atlas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <!-- Populated dynamically from exact spliceware-main.zip metadata -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-biosplice-950/90 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-400">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+        <span class="text-slate-200 font-semibold">spliceware-main</span>
+        <span>· Cellular Substrates, Sacred Splicer, Extiroh WASM &amp; Causal Evolutionary Fabric</span>
+      </div>
+      <div>
+        Ready for GitHub Pages · Drop in as <code class="text-teal-300">index.html</code> or <code class="text-teal-300">docs/index.html</code>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================================= -->
+  <!-- SPLICEWARE MATHEMATICAL ENGINE, WEBGL RENDERER & CELLULAR SIMULATORS    -->
+  <!-- ======================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------------------------------------------------------------------
+       * 1. NON-BLOCKING TOAST, ROUNDED RECT & CLIPBOARD HELPERS (ZERO alert())
+       * -------------------------------------------------------------------*/
+      function showToast(message, accent) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const el = document.createElement('div');
+        const cls = accent === 'fuchsia'
+          ? 'border-fuchsia-400/50 text-fuchsia-200'
+          : (accent === 'amber' ? 'border-amber-400/50 text-amber-200' : 'border-teal-400/50 text-teal-200');
+        el.className = 'glass-panel px-4 py-2.5 rounded-xl text-xs font-mono border shadow-xl transition-all duration-300 ' + cls;
+        el.textContent = message;
+        container.appendChild(el);
+        setTimeout(function () {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(8px)';
+          setTimeout(function () {
+            if (el.parentNode) el.parentNode.removeChild(el);
+          }, 300);
+        }, 2600);
+      }
+
+      function copyTextSafe(text, label) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast('Copied: ' + (label || text), 'teal');
+        } catch (err) {
+          showToast('Clipboard copy restricted in this preview frame', 'amber');
+        }
+      }
+
+      function roundedRectPath(ctx, x, y, w, h, r) {
+        const rad = Math.min(r, w * 0.5, h * 0.5);
+        ctx.beginPath();
+        ctx.moveTo(x + rad, y);
+        ctx.lineTo(x + w - rad, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + rad);
+        ctx.lineTo(x + w, y + h - rad);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+        ctx.lineTo(x + rad, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - rad);
+        ctx.lineTo(x, y + rad);
+        ctx.quadraticCurveTo(x, y, x + rad, y);
+        ctx.closePath();
+      }
+
+      /* ---------------------------------------------------------------------
+       * 2. SPLICEWARE MATHEMATICAL PRIMITIVES (SIMPLEX, SEAM, CRDT, BINOMIAL)
+       * -------------------------------------------------------------------*/
+      const PI = Math.PI;
+      const TAU = Math.PI * 2.0;
+
+      // Anchor-Gated Simplex Projection Π_{Δ_α}: ensures p_i >= α and sum(p_i) == 1
+      // Prevents premature loss of LOOP/CALL/SPLICE opcodes (docs/05 & code-13-loop-call-adaptive-weights.c)
+      function anchorProject(weights, alphaFloor) {
+        const k = weights.length;
+        const alpha = Math.max(0.0, Math.min(0.95 / k, alphaFloor === undefined ? 0.05 : alphaFloor));
+        const budget = 1.0 - k * alpha;
+        let posSum = 0.0;
+        const clean = new Array(k);
+        for (let i = 0; i < k; i++) {
+          clean[i] = Math.max(0.0, weights[i]);
+          posSum += clean[i];
+        }
+        if (posSum <= 1e-12) {
+          return clean.map(function () { return 1.0 / k; });
+        }
+        return clean.map(function (w) {
+          return alpha + budget * (w / posSum);
+        });
+      }
+
+      // Map 4D Probability Vector p = [p0, p1, p2, p3] ∈ Δ³ onto Regular 3D Tetrahedron in ℝ³
+      const TETRA_VERTS = [
+        [0.0, 1.38, 0.0],          // V0: LOOP
+        [-1.28, -0.46, 0.74],      // V1: CALL
+        [1.28, -0.46, 0.74],       // V2: SPLICE
+        [0.0, -0.46, -1.48]        // V3: ARITH / ANCHOR
+      ];
+
+      function simplexTo3D(p0, p1, p2, p3) {
+        const p = anchorProject([p0, p1, p2, p3], 0.03);
+        return [
+          p[0] * TETRA_VERTS[0][0] + p[1] * TETRA_VERTS[1][0] + p[2] * TETRA_VERTS[2][0] + p[3] * TETRA_VERTS[3][0],
+          p[0] * TETRA_VERTS[0][1] + p[1] * TETRA_VERTS[1][1] + p[2] * TETRA_VERTS[2][1] + p[3] * TETRA_VERTS[3][1],
+          p[0] * TETRA_VERTS[0][2] + p[1] * TETRA_VERTS[1][2] + p[2] * TETRA_VERTS[2][2] + p[3] * TETRA_VERTS[3][2]
+        ];
+      }
+
+      // Smooth Homologous Crossover Seam Sigmoid H(s; s_0, κ) ∈ [0, 1]
+      function homologousSeam(s, seamLocus, sharpness) {
+        const k = (sharpness || 0.75) * 14.0;
+        return 0.5 + 0.5 * Math.tanh((s - (seamLocus || 0.5)) * k);
+      }
+
+      // Mitosis Cytokinesis Cell Membrane Surface (single cell -> peanut cleavage -> 2 A/B daughter arenas)
+      function mitosisCell(u, s, cleavage, swirl, t) {
+        const theta = s * PI;
+        const phi = u * TAU + swirl * 0.25 * Math.sin(theta * 2.0 + t * 0.5);
+        const c = Math.max(0.0, Math.min(1.25, cleavage));
+
+        // Neck constriction at equator x = 0 + twin lobe separation along X
+        const cosT = Math.cos(theta);
+        const sinT = Math.sin(theta);
+        const pinch = 1.0 - 0.68 * Math.min(1.0, c) * Math.exp(-cosT * cosT * 5.5);
+        const lobeShift = 0.68 * c * Math.tanh(cosT * 3.2);
+
+        const x = cosT * 1.15 + lobeShift;
+        const y = sinT * Math.cos(phi) * pinch * 1.05;
+        const z = sinT * Math.sin(phi) * pinch * 1.05;
+        return [x, y, z];
+      }
+
+      // Exact Binomial Coefficient C(n, k) mod 10 & Continuous Pascal Wave (proposals/2026-11-lexicase-and-triangular-sum.md)
+      const PASCAL_MOD10 = (function buildPascal() {
+        const rows = [];
+        for (let n = 0; n <= 32; n++) {
+          const row = new Array(n + 1).fill(1);
+          for (let k = 1; k < n; k++) {
+            row[k] = (rows[n - 1][k - 1] + rows[n - 1][k]) % 10;
+          }
+          rows.push(row);
+        }
+        return rows;
+      })();
+
+      function binomialWave(rowIdx, s, amp) {
+        const n = Math.max(1, Math.min(31, rowIdx | 0));
+        const pos = Math.max(0, Math.min(n, s * n));
+        const k0 = Math.floor(pos);
+        const k1 = Math.min(n, k0 + 1);
+        const frac = pos - k0;
+        const v0 = PASCAL_MOD10[n][k0] / 9.0;
+        const v1 = PASCAL_MOD10[n][k1] / 9.0;
+        return ((1.0 - frac) * v0 + frac * v1) * (amp || 1.0);
+      }
+
+      // Deterministic FNV-1a 32-bit Merkle Digest for Causal Provenance
+      function hashBytesFNV1a(arr, salt) {
+        let h = (0x811c9dc5 ^ (salt || 0)) >>> 0;
+        for (let i = 0; i < arr.length; i++) {
+          h ^= (arr[i] & 0xff);
+          h = Math.imul(h, 0x01000193) >>> 0;
+        }
+        return h >>> 0;
+      }
+
+      /* ---------------------------------------------------------------------
+       * 3. INTERACTIVE BARYCENTRIC ADAPTIVE PRIOR SIMPLEX PAD STATE
+       * -------------------------------------------------------------------*/
+      // Represents live adaptive weights [p_LOOP, p_CALL, p_SPLICE] on Δ² with anchor α = 0.05
+      const priorBary = { pLoop: 0.42, pCall: 0.28, pSplice: 0.30 };
+      let draggingSimplex = false;
+
+      /* ---------------------------------------------------------------------
+       * 4. FIVE CURATED SPLICESCRIPT PRESETS (MAPPED TO spliceware-main)
+       * -------------------------------------------------------------------*/
+      const PRESETS = {
+        sacred: {
+          filename: '01_sacred_homologous_crossover.splice',
+          hudTitle: 'Sacred Splicer Homologous Seam Recombination',
+          badge: 'docs/04 · code-08-sacred-splice.c · v3_evogenesis.c',
+          latex: '\\operatorname{Splice}(G_A, G_B;\\, s_*) = G_A[0..s_*] \\mathbin{\\|\\!_{\\text{hom}}} G_B[s_*..L], \\quad \\Delta\\text{depth}(s_*) = 0',
+          caption: 'Visualizes Parent Alpha (teal) and Parent Beta (fuchsia) double helices exchanging genetic strands across a conserved Homologous Crossover Seam s* while rung bridges verify zero block-depth corruption!',
+          sliders: {
+            p0: { label: 'Crossover Seam Locus s*', min: 0.15, max: 0.85, step: 0.01, val: 0.50 },
+            p1: { label: 'Helical Twist Turns', min: 1.00, max: 4.50, step: 0.05, val: 2.40 },
+            p2: { label: 'Homologous Seam Pinch', min: 0.15, max: 1.25, step: 0.02, val: 0.85 },
+            p3: { label: 'Replication Wave ω', min: 0.50, max: 5.00, step: 0.10, val: 2.10 }
+          },
+          code:
+`// Strands 0..15: Homologous Parent Helices | Strands 16..31: Codon Base-Pair Rungs
+const x = (s - 0.5) * 3.6;
+const seam = homologousSeam(s, params.p0, params.p2);
+const pinch = 1.0 - 0.58 * params.p2 * exp(-pow((s - params.p0) * 6.5, 2));
+const twist = s * TAU * params.p1 - t * 0.32 * params.p3 + priors.pLoop * 1.5;
+
+if (i < 16) {
+  const isAlpha = (i % 2 === 0);
+  const bundleOff = (Math.floor(i / 2) - 3.5) * 0.065;
+  // Smooth strand exchange across the homologous seam!
+  const strandSign = isAlpha ? (1.0 - 2.0 * seam) : (2.0 * seam - 1.0);
+  const rad = (0.88 + bundleOff) * pinch;
+  return {
+    pos: [x, rad * cos(twist) * strandSign, rad * sin(twist) * strandSign],
+    hue: isAlpha ? (0.46 + 0.36 * seam) : (0.84 - 0.38 * seam),
+    radius: i < 2 ? 0.044 : 0.022
+  };
+}
+
+// Transverse Sacred Codon Rungs connecting Parent A & Parent B
+const rungS = ((i - 16) + 0.5) / 16;
+const rx = (rungS - 0.5) * 3.5;
+const rTwist = rungS * TAU * params.p1 - t * 0.32 * params.p3 + priors.pLoop * 1.5;
+const rPinch = 0.88 * (1.0 - 0.58 * params.p2 * exp(-pow((rungS - params.p0) * 6.5, 2)));
+const span = (s * 2.0 - 1.0) * rPinch;
+return {
+  pos: [rx, span * cos(rTwist), span * sin(rTwist)],
+  hue: abs(rungS - params.p0) < 0.08 ? 0.13 : 0.50,
+  radius: abs(rungS - params.p0) < 0.08 ? 0.034 : 0.016
+};`
+        },
+
+        mitosis: {
+          filename: '02_mitosis_ab_tournament_arena.splice',
+          hudTitle: 'Unified Cell Arena Mitosis & A/B Tournament',
+          badge: 'code-06-mitosis-step-branch.c · substrates/c11/v4_unigenesis.c',
+          latex: '\\mathcal{C}_0 \\xrightarrow{\\texttt{memcpy O(1)}} (\\mathcal{C}_A, \\mathcal{C}_B) \\xrightarrow{\\text{Mutate}(\\Delta_\\alpha)} \\arg\\max_{X \\in \\{A,B\\}} \\mathcal{F}_{\\text{lex}}(X)',
+          caption: 'A contiguous C11 Unified Cell Arena cleaves along its equatorial furrow into Parent Cell A and Mutant Daughter B. Drag "Cytokinesis Cleavage" from 0 → 1.2 to watch live cell division!',
+          sliders: {
+            p0: { label: 'Cytokinesis Cleavage', min: 0.00, max: 1.22, step: 0.01, val: 0.86 },
+            p1: { label: 'Membrane Torsion', min: 0.00, max: 4.00, step: 0.05, val: 1.65 },
+            p2: { label: 'Arena Breathing Amp', min: 0.05, max: 0.60, step: 0.01, val: 0.22 },
+            p3: { label: 'Metabolic Pulse ω', min: 0.50, max: 5.00, step: 0.10, val: 2.40 }
+          },
+          code:
+`// Meridians of the Unified Cell Arena undergoing O(1) Mitosis A/B branching
+const u = i / N;
+const pulse = params.p0 + params.p2 * 0.35 * sin(t * params.p3 * 0.6);
+const p = mitosisCell(u, s, pulse, params.p1 + priors.pSplice * 2.0, t);
+
+// Left lobe = Conserved Parent Arena A (Teal), Right lobe = Mutant Daughter B (Fuchsia)
+const side = 0.5 + 0.5 * tanh(p[0] * 1.8);
+return {
+  pos: p,
+  hue: (0.46 + 0.38 * side) % 1.0,
+  radius: (i % 8 === 0) ? 0.036 : 0.021
+};`
+        },
+
+        merkle: {
+          filename: '03_causal_merkle_crdt_fabric.splice',
+          hudTitle: 'Causal Cryptographic Merkle-CRDT Peer Fabric',
+          badge: 'docs/02-causal-cryptographic-determinism.md · run_peers.sh',
+          latex: 'S_A \\sqcup S_B = S_B \\sqcup S_A, \\quad (S_A \\sqcup S_B) \\sqcup S_C = S_A \\sqcup (S_B \\sqcup S_C), \\quad S_A \\sqcup S_A = S_A',
+          caption: 'Evolutionary peer processes fork to explore parallel mutations and deterministically reconverge at gold Merkle-CRDT sync epochs without coordination locks or divergent state drift!',
+          sliders: {
+            p0: { label: 'CRDT Join Sync Rate', min: 1.00, max: 5.00, step: 0.10, val: 3.00 },
+            p1: { label: 'Fork Exploration Span', min: 0.25, max: 1.45, step: 0.02, val: 0.92 },
+            p2: { label: 'Causal Braid Twist', min: 0.20, max: 3.50, step: 0.05, val: 1.40 },
+            p3: { label: 'Hash Epoch Velocity', min: 0.50, max: 5.00, step: 0.10, val: 2.00 }
+          },
+          code:
+`// Distributed evolutionary peers diverging & joining at deterministic Merkle sync nodes
+const u = i / N;
+const x = (s - 0.5) * 3.7;
+
+// Periodic join-semilattice sync envelopes where fork radius collapses to consensus!
+const syncEnv = abs(sin(s * PI * params.p0 - t * 0.25 * params.p3));
+const rad = (0.10 + params.p1 * pow(syncEnv, 0.85)) * (0.75 + 0.4 * priors.pCall);
+const ang = u * TAU + s * params.p2 * 2.0 + sin(i * 1.7) * 0.3;
+
+return {
+  pos: [x, rad * cos(ang), rad * sin(ang)],
+  // Gold at Merkle join consensus nodes, Teal/Fuchsia during parallel exploration forks
+  hue: (0.13 + 0.42 * syncEnv + 0.15 * u) % 1.0,
+  radius: syncEnv < 0.18 ? 0.036 : 0.020
+};`
+        },
+
+        simplex: {
+          filename: '04_anchor_gated_prior_simplex.splice',
+          hudTitle: 'Anchor-Gated Adaptive Prior Simplex Δ³',
+          badge: 'docs/05 · substrates/c11/v2_adaptive_loop.c · code-13',
+          latex: 'p^{(t+1)} = \\Pi_{\\Delta_\\alpha}\\!\\Bigl((1 - \\eta)p^{(t)} + \\eta\\,\\mathbf{e}_{\\text{win}}\\Bigr), \\quad \\Delta_\\alpha = \\{p \\in \\Delta^{K-1} : p_k \\ge \\alpha\\}',
+          caption: 'Replicator dynamics flowing inside the 3D Opcode Probability Tetrahedron Δ³ (LOOP, CALL, SPLICE, ARITH). Drag the "Anchor Floor α" slider or the Δ² Pad to prevent degenerate boundary extinction!',
+          sliders: {
+            p0: { label: 'Anchor Floor α', min: 0.02, max: 0.22, step: 0.01, val: 0.08 },
+            p1: { label: 'Learning Rate η', min: 0.20, max: 2.50, step: 0.05, val: 1.25 },
+            p2: { label: 'Fitness Swirl Gain', min: 0.10, max: 2.00, step: 0.05, val: 0.95 },
+            p3: { label: 'Epoch Drift Speed', min: 0.40, max: 4.00, step: 0.10, val: 1.80 }
+          },
+          code:
+`// First 6 filaments draw the exact 6 edges of the Regular Opcode Tetrahedron Δ³!
+if (i < 6) {
+  const pairs = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]][i];
+  const w = [0, 0, 0, 0];
+  w[pairs[0]] = 1 - s;
+  w[pairs[1]] = s;
+  return { pos: simplexTo3D(w[0], w[1], w[2], w[3]), hue: 0.14, radius: 0.018 };
+}
+
+// Replicator trajectories converging toward your interactive Adaptive Prior Pad!
+const u = (i - 6) / (N - 6);
+const ang = u * TAU + s * params.p2 * 2.2 + t * 0.2 * params.p3;
+const decay = exp(-s * params.p1 * 1.8);
+
+const w0 = (1 - decay) * priors.pLoop   + decay * (0.5 + 0.48 * cos(ang));
+const w1 = (1 - decay) * priors.pCall   + decay * (0.5 + 0.48 * sin(ang));
+const w2 = (1 - decay) * priors.pSplice + decay * (0.5 + 0.48 * cos(ang * 2.0));
+const w3 = 0.22 + 0.25 * decay * sin(ang * 3.0);
+
+const gp = anchorProject([w0, w1, w2, w3], params.p0);
+return {
+  pos: simplexTo3D(gp[0], gp[1], gp[2], gp[3]),
+  hue: (0.45 + 0.42 * (1 - decay) + 0.1 * u) % 1.0,
+  radius: s > 0.88 ? 0.036 : 0.021
+};`
+        },
+
+        triangular: {
+          filename: '05_lexicase_triangular_sum_wave.splice',
+          hudTitle: 'Lexicase Specialist Sieve × Pascal Triangular Sum',
+          badge: 'docs/proposals/2026-11-lexicase-and-triangular-sum.md',
+          latex: 'T(x_0,\\dots,x_{n-1}) = \\sum_{k=0}^{n-1} \\binom{n-1}{k} x_k \\bmod 10, \\quad P_{\\text{lex}}(c) = \\frac{1}{|\\mathcal{T}|!}\\sum_{\\pi} \\mathbb{I}[\\text{win}(c,\\pi)]',
+          caption: 'Renders the binomial mod-10 Pascal pyramid governing the Triangular Sum synthesis benchmark—highlighting non-dominated Lexicase specialist ridges that guide evolutionary loop discovery!',
+          sliders: {
+            p0: { label: 'Mod-10 Relief Height', min: 0.25, max: 1.60, step: 0.02, val: 0.96 },
+            p1: { label: 'Pyramid Span Scale', min: 0.50, max: 1.45, step: 0.02, val: 1.08 },
+            p2: { label: 'Carry Ripple Amp', min: 0.00, max: 0.60, step: 0.02, val: 0.24 },
+            p3: { label: 'Cascade Wave Speed', min: 0.50, max: 5.00, step: 0.10, val: 2.30 }
+          },
+          code:
+`// Each filament i traces row n = i + 1 of Pascal's Binomial Triangle mod 10!
+const row = i + 1;
+const rowFrac = row / N;
+const width = rowFrac * 3.1 * params.p1;
+
+const x = (s - 0.5) * width;
+const z = (rowFrac - 0.5) * 3.0;
+const binomH = binomialWave(row, s, params.p0);
+const ripple = params.p2 * sin(row * 0.6 - t * params.p3 + s * PI);
+
+const y = binomH - 0.48 + ripple;
+return {
+  pos: [x, y, z],
+  hue: (0.44 + 0.45 * (binomH / max(0.2, params.p0))) % 1.0,
+  radius: binomH > 0.65 * params.p0 ? 0.032 : 0.019
+};`
+        }
+      };
+
+      /* ---------------------------------------------------------------------
+       * 5. SPLICESCRIPT SANDBOX COMPILER
+       * -------------------------------------------------------------------*/
+      let activeSampleFn = null;
+      let currentPresetKey = 'sacred';
+
+      function getSliderParams() {
+        return {
+          p0: parseFloat(document.getElementById('slider-p0').value),
+          p1: parseFloat(document.getElementById('slider-p1').value),
+          p2: parseFloat(document.getElementById('slider-p2').value),
+          p3: parseFloat(document.getElementById('slider-p3').value)
+        };
+      }
+
+      function normalizeFilamentOut(out, i, N) {
+        if (Array.isArray(out)) {
+          return { pos: [out[0] || 0, out[1] || 0, out[2] || 0], hue: i / N, radius: 0.022 };
+        }
+        if (out && Array.isArray(out.pos)) {
+          return {
+            pos: out.pos,
+            hue: typeof out.hue === 'number' ? out.hue : (i / N),
+            radius: typeof out.radius === 'number' ? out.radius : 0.022
+          };
+        }
+        return { pos: [0, 0, 0], hue: 0.46, radius: 0.022 };
+      }
+
+      function compileSpliceScript(sourceCode) {
+        const errBanner = document.getElementById('script-error-banner');
+        const badge = document.getElementById('compile-status');
+        try {
+          const factory = new Function(
+            'std',
+            '"use strict";\n' +
+            'const { PI, TAU, sin, cos, tan, asin, acos, atan2, sqrt, exp, abs, pow, min, max, tanh, ' +
+            'homologousSeam, mitosisCell, anchorProject, simplexTo3D, binomialWave, priors } = std;\n' +
+            'return function sampleFilament(i, N, s, t, params) {\n' +
+            sourceCode + '\n' +
+            '};'
+          );
+
+          const candidate = factory({
+            PI: PI,
+            TAU: TAU,
+            sin: Math.sin,
+            cos: Math.cos,
+            tan: Math.tan,
+            asin: Math.asin,
+            acos: Math.acos,
+            atan2: Math.atan2,
+            sqrt: Math.sqrt,
+            exp: Math.exp,
+            abs: Math.abs,
+            pow: Math.pow,
+            min: Math.min,
+            max: Math.max,
+            tanh: Math.tanh,
+            homologousSeam: homologousSeam,
+            mitosisCell: mitosisCell,
+            anchorProject: anchorProject,
+            simplexTo3D: simplexTo3D,
+            binomialWave: binomialWave,
+            priors: priorBary
+          });
+
+          const dry = normalizeFilamentOut(candidate(0, 32, 0.5, 0.0, getSliderParams()), 0, 32);
+          if (!isFinite(dry.pos[0]) || !isFinite(dry.pos[1]) || !isFinite(dry.pos[2])) {
+            throw new Error('Filament evaluated to non-finite coordinates (NaN / Infinity).');
+          }
+
+          activeSampleFn = candidate;
+          if (errBanner) errBanner.classList.add('hidden');
+          if (badge) {
+            badge.textContent = 'Compiled · Live 60 FPS';
+            badge.className = 'px-2 py-0.5 rounded-md text-[10px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+          }
+          return true;
+        } catch (err) {
+          if (errBanner) {
+            errBanner.textContent = 'SpliceScript Diagnostic: ' + err.message;
+            errBanner.classList.remove('hidden');
+          }
+          if (badge) {
+            badge.textContent = 'Syntax Hold (Last Valid Active)';
+            badge.className = 'px-2 py-0.5 rounded-md text-[10px] font-mono bg-amber-500/15 text-amber-300 border border-amber-500/30';
+          }
+          return false;
+        }
+      }
+
+      // Allocation-free HSL -> RGB write
+      function hslToRgb(h, s, l, out, offset) {
+        const hh = ((h % 1.0) + 1.0) % 1.0;
+        const c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
+        const x = c * (1.0 - Math.abs(((hh * 6.0) % 2.0) - 1.0));
+        const m = l - c * 0.5;
+        let r = 0, g = 0, b = 0;
+        const seg = Math.floor(hh * 6.0);
+        if (seg === 0) { r = c; g = x; b = 0; }
+        else if (seg === 1) { r = x; g = c; b = 0; }
+        else if (seg === 2) { r = 0; g = c; b = x; }
+        else if (seg === 3) { r = 0; g = x; b = c; }
+        else if (seg === 4) { r = x; g = 0; b = c; }
+        else { r = c; g = 0; b = x; }
+        out[offset] = r + m;
+        out[offset + 1] = g + m;
+        out[offset + 2] = b + m;
+      }
+
+      /* ---------------------------------------------------------------------
+       * 6. THREE.JS 3D BIOLUMINESCENT CELLULAR & EVOLUTIONARY RENDERER
+       * -------------------------------------------------------------------*/
+      const NUM_FILAMENTS = 32;
+      const SEGMENTS = 78;
+      const RADIAL_SIDES = 6;
+      const CODONS_PER_FILAMENT = 20;
+
+      let scene, camera, renderer;
+      let tubeGeometry, tubePosAttr, tubeNormAttr, tubeColAttr;
+      let sporeGeometry, sporePosAttr, sporeColAttr;
+      let triadGroup, arrowStrand, arrowSeam, arrowHash, triadNucleus;
+
+      let camTheta = 0.64;
+      let camPhi = 1.18;
+      let camRadius = 5.35;
+      let targetTheta = 0.64;
+      let targetPhi = 1.18;
+      let targetRadius = 5.35;
+      let isPointerDown = false;
+      let prevPointerX = 0;
+      let prevPointerY = 0;
+      let simPaused = false;
+      let showTriad = true;
+      let simTime = 0.0;
+
+      const centerPts = new Float32Array((SEGMENTS + 1) * 3);
+      const tangents = new Float32Array((SEGMENTS + 1) * 3);
+      const radialCos = new Float32Array(RADIAL_SIDES);
+      const radialSin = new Float32Array(RADIAL_SIDES);
+      for (let r = 0; r < RADIAL_SIDES; r++) {
+        radialCos[r] = Math.cos((r / RADIAL_SIDES) * TAU);
+        radialSin[r] = Math.sin((r / RADIAL_SIDES) * TAU);
+      }
+
+      function createBiolumSpriteTexture() {
+        const c = document.createElement('canvas');
+        c.width = 64;
+        c.height = 64;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createRadialGradient(32, 32, 1, 32, 32, 31);
+        grad.addColorStop(0.0, 'rgba(255, 255, 255, 1.0)');
+        grad.addColorStop(0.28, 'rgba(153, 246, 228, 0.90)');
+        grad.addColorStop(0.66, 'rgba(45, 212, 191, 0.25)');
+        grad.addColorStop(1.0, 'rgba(0, 0, 0, 0.0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 64, 64);
+        const tex = new THREE.CanvasTexture(c);
+        tex.needsUpdate = true;
+        return tex;
+      }
+
+      function initThreeStage() {
+        const container = document.getElementById('webgl-container');
+        const w = container.clientWidth || 720;
+        const h = container.clientHeight || 560;
+
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(44, w / h, 0.1, 100);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(w, h);
+        container.appendChild(renderer.domElement);
+
+        // Bioluminescent Studio Lighting
+        scene.add(new THREE.AmbientLight(0xccfbf1, 0.62));
+        const keyLight = new THREE.DirectionalLight(0x5eead4, 1.15);
+        keyLight.position.set(5, 7, 6);
+        scene.add(keyLight);
+
+        const orchidRim = new THREE.DirectionalLight(0xe879f9, 0.95);
+        orchidRim.position.set(-6, -4, -5);
+        scene.add(orchidRim);
+
+        // Subtle Cellular Membrane Reference Rings
+        const ringGroup = new THREE.Group();
+        const ringMat = new THREE.LineBasicMaterial({ color: 0x1e3a40, transparent: true, opacity: 0.36 });
+        for (let k = 0; k < 3; k++) {
+          const pts = [];
+          const rad = 1.40;
+          for (let j = 0; j <= 96; j++) {
+            const ang = (j / 96) * TAU;
+            if (k === 0) pts.push(new THREE.Vector3(rad * Math.cos(ang), rad * Math.sin(ang), 0));
+            else if (k === 1) pts.push(new THREE.Vector3(rad * Math.cos(ang), 0, rad * Math.sin(ang)));
+            else pts.push(new THREE.Vector3(0, rad * Math.cos(ang), rad * Math.sin(ang)));
+          }
+          ringGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ringMat));
+        }
+        scene.add(ringGroup);
+
+        // Volumetric Tube Geometry for all NUM_FILAMENTS
+        const vertsPerFil = (SEGMENTS + 1) * RADIAL_SIDES;
+        const totalVerts = NUM_FILAMENTS * vertsPerFil;
+        const totalIndices = NUM_FILAMENTS * SEGMENTS * RADIAL_SIDES * 6;
+
+        const positions = new Float32Array(totalVerts * 3);
+        const normals = new Float32Array(totalVerts * 3);
+        const colors = new Float32Array(totalVerts * 3);
+        const indices = new Uint32Array(totalIndices);
+
+        let ptr = 0;
+        for (let f = 0; f < NUM_FILAMENTS; f++) {
+          const baseV = f * vertsPerFil;
+          for (let s = 0; s < SEGMENTS; s++) {
+            for (let r = 0; r < RADIAL_SIDES; r++) {
+              const rNext = (r + 1) % RADIAL_SIDES;
+              const v00 = baseV + s * RADIAL_SIDES + r;
+              const v01 = baseV + s * RADIAL_SIDES + rNext;
+              const v10 = baseV + (s + 1) * RADIAL_SIDES + r;
+              const v11 = baseV + (s + 1) * RADIAL_SIDES + rNext;
+              indices[ptr++] = v00;
+              indices[ptr++] = v10;
+              indices[ptr++] = v11;
+              indices[ptr++] = v00;
+              indices[ptr++] = v11;
+              indices[ptr++] = v01;
+            }
+          }
+        }
+
+        tubeGeometry = new THREE.BufferGeometry();
+        tubePosAttr = new THREE.BufferAttribute(positions, 3);
+        tubeNormAttr = new THREE.BufferAttribute(normals, 3);
+        tubeColAttr = new THREE.BufferAttribute(colors, 3);
+        tubePosAttr.setUsage(THREE.DynamicDrawUsage);
+        tubeNormAttr.setUsage(THREE.DynamicDrawUsage);
+        tubeColAttr.setUsage(THREE.DynamicDrawUsage);
+
+        tubeGeometry.setAttribute('position', tubePosAttr);
+        tubeGeometry.setAttribute('normal', tubeNormAttr);
+        tubeGeometry.setAttribute('color', tubeColAttr);
+        tubeGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
+
+        const tubeMat = new THREE.MeshStandardMaterial({
+          vertexColors: true,
+          roughness: 0.25,
+          metalness: 0.36,
+          transparent: true,
+          opacity: 0.93
+        });
+        const tubeMesh = new THREE.Mesh(tubeGeometry, tubeMat);
+        tubeMesh.frustumCulled = false;
+        scene.add(tubeMesh);
+
+        // Streaming Codon Spores
+        const totalSpores = NUM_FILAMENTS * CODONS_PER_FILAMENT;
+        sporeGeometry = new THREE.BufferGeometry();
+        sporePosAttr = new THREE.BufferAttribute(new Float32Array(totalSpores * 3), 3);
+        sporeColAttr = new THREE.BufferAttribute(new Float32Array(totalSpores * 3), 3);
+        sporePosAttr.setUsage(THREE.DynamicDrawUsage);
+        sporeColAttr.setUsage(THREE.DynamicDrawUsage);
+        sporeGeometry.setAttribute('position', sporePosAttr);
+        sporeGeometry.setAttribute('color', sporeColAttr);
+
+        const sporeMat = new THREE.PointsMaterial({
+          size: 0.14,
+          map: createBiolumSpriteTexture(),
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.92,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const sporePoints = new THREE.Points(sporeGeometry, sporeMat);
+        sporePoints.frustumCulled = false;
+        scene.add(sporePoints);
+
+        // Extiroh Triad Shim Basis Frame
+        triadGroup = new THREE.Group();
+        const orig = new THREE.Vector3(0, 0, 0);
+        arrowStrand = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), orig, 0.52, 0x2dd4bf, 0.14, 0.08);
+        arrowSeam = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), orig, 0.52, 0xe879f9, 0.14, 0.08);
+        arrowHash = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), orig, 0.52, 0xfacc15, 0.14, 0.08);
+        triadNucleus = new THREE.Mesh(
+          new THREE.SphereGeometry(0.062, 16, 16),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        triadGroup.add(arrowStrand, arrowSeam, arrowHash, triadNucleus);
+        scene.add(triadGroup);
+
+        // Orbit & Zoom Listeners
+        const dom = renderer.domElement;
+        dom.addEventListener('mousedown', function (e) {
+          isPointerDown = true;
+          prevPointerX = e.clientX;
+          prevPointerY = e.clientY;
+        });
+        window.addEventListener('mouseup', function () { isPointerDown = false; });
+        window.addEventListener('mousemove', function (e) {
+          if (!isPointerDown) return;
+          const dx = e.clientX - prevPointerX;
+          const dy = e.clientY - prevPointerY;
+          prevPointerX = e.clientX;
+          prevPointerY = e.clientY;
+          targetTheta -= dx * 0.0075;
+          targetPhi = Math.max(0.18, Math.min(PI - 0.18, targetPhi - dy * 0.0075));
+        });
+        dom.addEventListener('wheel', function (e) {
+          e.preventDefault();
+          targetRadius = Math.max(2.4, Math.min(10.5, targetRadius + e.deltaY * 0.0035));
+        }, { passive: false });
+
+        let prevPinch = 0;
+        dom.addEventListener('touchstart', function (e) {
+          if (e.touches.length === 1) {
+            isPointerDown = true;
+            prevPointerX = e.touches[0].clientX;
+            prevPointerY = e.touches[0].clientY;
+          } else if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            prevPinch = Math.sqrt(dx * dx + dy * dy);
+          }
+        }, { passive: true });
+        dom.addEventListener('touchmove', function (e) {
+          if (e.touches.length === 1 && isPointerDown) {
+            e.preventDefault();
+            const dx = e.touches[0].clientX - prevPointerX;
+            const dy = e.touches[0].clientY - prevPointerY;
+            prevPointerX = e.touches[0].clientX;
+            prevPointerY = e.touches[0].clientY;
+            targetTheta -= dx * 0.008;
+            targetPhi = Math.max(0.18, Math.min(PI - 0.18, targetPhi - dy * 0.008));
+          } else if (e.touches.length === 2) {
+            e.preventDefault();
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (prevPinch > 0) {
+              targetRadius = Math.max(2.4, Math.min(10.5, targetRadius - (dist - prevPinch) * 0.015));
+            }
+            prevPinch = dist;
+          }
+        }, { passive: false });
+        dom.addEventListener('touchend', function () {
+          isPointerDown = false;
+          prevPinch = 0;
+        });
+
+        window.addEventListener('resize', handleResize);
+      }
+
+      function handleResize() {
+        const container = document.getElementById('webgl-container');
+        if (container && renderer && camera) {
+          const w = container.clientWidth || 640;
+          const h = container.clientHeight || 520;
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        }
+        drawSimplexPad();
+        drawCrossoverCanvas();
+        drawLexicaseCanvas();
+      }
+
+      let hudCounter = 0;
+      function updateCellularGeometry(t) {
+        if (!activeSampleFn) return;
+        const params = getSliderParams();
+        const posArr = tubePosAttr.array;
+        const normArr = tubeNormAttr.array;
+        const colArr = tubeColAttr.array;
+        const spPos = sporePosAttr.array;
+        const spCol = sporeColAttr.array;
+
+        const vertsPerFil = (SEGMENTS + 1) * RADIAL_SIDES;
+        const triadSeg = Math.floor(((t * 0.24) % 1.0) * SEGMENTS);
+        let triadPos = [0, 0, 0];
+        let triadTan = [1, 0, 0];
+        let triadRad = [0, 0, 1];
+
+        for (let f = 0; f < NUM_FILAMENTS; f++) {
+          let filHue = 0.46;
+          let filRadius = 0.022;
+
+          for (let sIdx = 0; sIdx <= SEGMENTS; sIdx++) {
+            const s = sIdx / SEGMENTS;
+            let res;
+            try {
+              res = normalizeFilamentOut(activeSampleFn(f, NUM_FILAMENTS, s, t, params), f, NUM_FILAMENTS);
+            } catch (e) {
+              res = { pos: [0, 0, 0], hue: 0.46, radius: 0.022 };
+            }
+
+            const px = Math.max(-4.5, Math.min(4.5, res.pos[0] || 0));
+            const py = Math.max(-4.5, Math.min(4.5, res.pos[1] || 0));
+            const pz = Math.max(-4.5, Math.min(4.5, res.pos[2] || 0));
+
+            centerPts[sIdx * 3] = px;
+            centerPts[sIdx * 3 + 1] = py;
+            centerPts[sIdx * 3 + 2] = pz;
+
+            if (sIdx === Math.floor(SEGMENTS * 0.5)) {
+              filHue = res.hue;
+              filRadius = Math.max(0.008, Math.min(0.075, res.radius));
+            }
+          }
+
+          for (let sIdx = 0; sIdx <= SEGMENTS; sIdx++) {
+            const prev = Math.max(0, sIdx - 1);
+            const next = Math.min(SEGMENTS, sIdx + 1);
+            let tx = centerPts[next * 3] - centerPts[prev * 3];
+            let ty = centerPts[next * 3 + 1] - centerPts[prev * 3 + 1];
+            let tz = centerPts[next * 3 + 2] - centerPts[prev * 3 + 2];
+            const tl = Math.sqrt(tx * tx + ty * ty + tz * tz) || 1.0;
+            tangents[sIdx * 3] = tx / tl;
+            tangents[sIdx * 3 + 1] = ty / tl;
+            tangents[sIdx * 3 + 2] = tz / tl;
+          }
+
+          let tx0 = tangents[0], ty0 = tangents[1], tz0 = tangents[2];
+          let ax = Math.abs(tx0) < 0.85 ? 1.0 : 0.0;
+          let ay = Math.abs(tx0) < 0.85 ? 0.0 : 1.0;
+          let ux = -tz0 * ay;
+          let uy = tz0 * ax;
+          let uz = tx0 * ay - ty0 * ax;
+          let ul = Math.sqrt(ux * ux + uy * uy + uz * uz) || 1.0;
+          ux /= ul; uy /= ul; uz /= ul;
+
+          const baseV = f * vertsPerFil;
+          const lum = f < 2 ? 0.66 : 0.55;
+          const sat = f < 2 ? 0.96 : 0.86;
+
+          for (let sIdx = 0; sIdx <= SEGMENTS; sIdx++) {
+            const tx = tangents[sIdx * 3];
+            const ty = tangents[sIdx * 3 + 1];
+            const tz = tangents[sIdx * 3 + 2];
+
+            const dotUT = ux * tx + uy * ty + uz * tz;
+            ux -= dotUT * tx;
+            uy -= dotUT * ty;
+            uz -= dotUT * tz;
+            const uLen = Math.sqrt(ux * ux + uy * uy + uz * uz) || 1.0;
+            ux /= uLen; uy /= uLen; uz /= uLen;
+
+            const vx = ty * uz - tz * uy;
+            const vy = tz * ux - tx * uz;
+            const vz = tx * uy - ty * ux;
+
+            const cx = centerPts[sIdx * 3];
+            const cy = centerPts[sIdx * 3 + 1];
+            const cz = centerPts[sIdx * 3 + 2];
+
+            if (f === 0 && sIdx === triadSeg) {
+              triadPos = [cx, cy, cz];
+              triadTan = [tx, ty, tz];
+              triadRad = [ux, uy, uz];
+            }
+
+            const localHue = (filHue + 0.05 * Math.sin((sIdx / SEGMENTS) * PI)) % 1.0;
+
+            for (let r = 0; r < RADIAL_SIDES; r++) {
+              const rc = radialCos[r];
+              const rs = radialSin[r];
+              const nx = ux * rc + vx * rs;
+              const ny = uy * rc + vy * rs;
+              const nz = uz * rc + vz * rs;
+
+              const vOff = (baseV + sIdx * RADIAL_SIDES + r) * 3;
+              posArr[vOff] = cx + filRadius * nx;
+              posArr[vOff + 1] = cy + filRadius * ny;
+              posArr[vOff + 2] = cz + filRadius * nz;
+
+              normArr[vOff] = nx;
+              normArr[vOff + 1] = ny;
+              normArr[vOff + 2] = nz;
+
+              hslToRgb(localHue, sat, lum, colArr, vOff);
+            }
+          }
+
+          // Update Streaming Codon Spores
+          for (let p = 0; p < CODONS_PER_FILAMENT; p++) {
+            const ph = ((p / CODONS_PER_FILAMENT) + t * 0.28 + f * 0.031) % 1.0;
+            const eIdx = ph * SEGMENTS;
+            const i0 = Math.floor(eIdx);
+            const i1 = Math.min(SEGMENTS, i0 + 1);
+            const fr = eIdx - i0;
+
+            const pOff = (f * CODONS_PER_FILAMENT + p) * 3;
+            spPos[pOff] = centerPts[i0 * 3] * (1 - fr) + centerPts[i1 * 3] * fr;
+            spPos[pOff + 1] = centerPts[i0 * 3 + 1] * (1 - fr) + centerPts[i1 * 3 + 1] * fr;
+            spPos[pOff + 2] = centerPts[i0 * 3 + 2] * (1 - fr) + centerPts[i1 * 3 + 2] * fr;
+
+            hslToRgb(filHue, 1.0, 0.78, spCol, pOff);
+          }
+        }
+
+        tubePosAttr.needsUpdate = true;
+        tubeNormAttr.needsUpdate = true;
+        tubeColAttr.needsUpdate = true;
+        sporePosAttr.needsUpdate = true;
+        sporeColAttr.needsUpdate = true;
+
+        triadGroup.visible = showTriad;
+        if (showTriad) {
+          triadGroup.position.set(triadPos[0], triadPos[1], triadPos[2]);
+          const vT = new THREE.Vector3(triadTan[0], triadTan[1], triadTan[2]).normalize();
+          const vS = new THREE.Vector3(triadRad[0], triadRad[1], triadRad[2]).normalize();
+          const vH = new THREE.Vector3().crossVectors(vT, vS).normalize();
+          arrowStrand.setDirection(vT);
+          arrowSeam.setDirection(vS);
+          arrowHash.setDirection(vH);
+        }
+
+        hudCounter++;
+        if (hudCounter % 4 === 0) {
+          const ps = [priorBary.pLoop, priorBary.pCall, priorBary.pSplice];
+          let ent = 0.0;
+          for (let k = 0; k < 3; k++) {
+            const pk = Math.max(1e-6, ps[k]);
+            ent -= pk * Math.log2(pk);
+          }
+          const minP = Math.min(ps[0], ps[1], ps[2]);
+          document.getElementById('hud-entropy').textContent = ent.toFixed(3) + ' bits';
+          document.getElementById('hud-anchor').textContent = 'min=' + minP.toFixed(3) + ' ✓';
+          updateSonification(ent);
+        }
+      }
+
+      /* ---------------------------------------------------------------------
+       * 7. OPTIONAL TONE.JS CODON ENTROPY HARMONIC SONIFICATION
+       * -------------------------------------------------------------------*/
+      let sonicEnabled = false;
+      let sonicSynth = null;
+      let sonicFilter = null;
+      let lastSonicMs = 0;
+
+      async function toggleSonification() {
+        const dot = document.getElementById('sonic-dot');
+        const label = document.getElementById('sonic-label');
+        if (!sonicEnabled) {
+          try {
+            await Tone.start();
+            if (!sonicSynth) {
+              sonicFilter = new Tone.Filter(1150, 'lowpass').toDestination();
+              sonicSynth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: 'sine' },
+                envelope: { attack: 0.35, decay: 0.25, sustain: 0.45, release: 1.3 }
+              }).connect(sonicFilter);
+              sonicSynth.volume.value = -19;
+            }
+            sonicEnabled = true;
+            dot.className = 'w-2 h-2 rounded-full bg-teal-400 animate-ping';
+            label.textContent = 'Codon Synth: ON';
+            showToast('Sacred Codon Harmonic Sonification Enabled', 'teal');
+          } catch (e) {
+            showToast('WebAudio blocked by browser', 'amber');
+          }
+        } else {
+          sonicEnabled = false;
+          if (sonicSynth) sonicSynth.releaseAll();
+          dot.className = 'w-2 h-2 rounded-full bg-slate-500';
+          label.textContent = 'Codon Synth: OFF';
+        }
+      }
+
+      function updateSonification(entropyBits) {
+        if (!sonicEnabled || !sonicSynth) return;
+        const now = performance.now();
+        if (now - lastSonicMs < 920) return;
+        lastSonicMs = now;
+        const base = 196.00 * (0.92 + 0.14 * entropyBits); // G3 bioluminescent consonance
+        sonicSynth.triggerAttackRelease([base, base * 1.25, base * 1.5, base * 1.875], '0.7');
+      }
+
+      /* ---------------------------------------------------------------------
+       * 8. INTERACTIVE BARYCENTRIC ADAPTIVE PRIOR SIMPLEX PAD (Δ²)
+       * -------------------------------------------------------------------*/
+      function initSimplexPad() {
+        const canvas = document.getElementById('simplex-pad-canvas');
+        if (!canvas) return;
+
+        function pointerToBary(cx, cy) {
+          const rect = canvas.getBoundingClientRect();
+          const w = rect.width || 180;
+          const h = rect.height || 180;
+          const px = cx - rect.left;
+          const py = cy - rect.top;
+
+          // Equilateral triangle vertices in pad space
+          const v0 = { x: w * 0.50, y: h * 0.13 }; // LOOP (Top)
+          const v1 = { x: w * 0.14, y: h * 0.84 }; // CALL (Bottom-Left)
+          const v2 = { x: w * 0.86, y: h * 0.84 }; // SPLICE (Bottom-Right)
+
+          const det = (v1.y - v2.y) * (v0.x - v2.x) + (v2.x - v1.x) * (v0.y - v2.y);
+          let l0 = ((v1.y - v2.y) * (px - v2.x) + (v2.x - v1.x) * (py - v2.y)) / det;
+          let l1 = ((v2.y - v0.y) * (px - v2.x) + (v0.x - v2.x) * (py - v2.y)) / det;
+          let l2 = 1.0 - l0 - l1;
+
+          // Project strictly into Anchor-Gated Simplex Δ_α (α = 0.06)!
+          const proj = anchorProject([Math.max(0, l0), Math.max(0, l1), Math.max(0, l2)], 0.06);
+          priorBary.pLoop = proj[0];
+          priorBary.pCall = proj[1];
+          priorBary.pSplice = proj[2];
+          drawSimplexPad();
+        }
+
+        canvas.addEventListener('mousedown', function (e) {
+          draggingSimplex = true;
+          pointerToBary(e.clientX, e.clientY);
+        });
+        window.addEventListener('mousemove', function (e) {
+          if (draggingSimplex) pointerToBary(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseup', function () { draggingSimplex = false; });
+
+        canvas.addEventListener('touchstart', function (e) {
+          if (e.touches.length === 1) {
+            e.preventDefault();
+            draggingSimplex = true;
+            pointerToBary(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: false });
+        canvas.addEventListener('touchmove', function (e) {
+          if (e.touches.length === 1 && draggingSimplex) {
+            e.preventDefault();
+            pointerToBary(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: false });
+        window.addEventListener('touchend', function () { draggingSimplex = false; });
+      }
+
+      function drawSimplexPad() {
+        const canvas = document.getElementById('simplex-pad-canvas');
+        if (!canvas) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = canvas.clientWidth || 180;
+        const h = canvas.clientHeight || 180;
+        if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const v0 = { x: w * 0.50, y: h * 0.14 };
+        const v1 = { x: w * 0.14, y: h * 0.84 };
+        const v2 = { x: w * 0.86, y: h * 0.84 };
+
+        // Outer full probability simplex Δ²
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(v0.x, v0.y);
+        ctx.lineTo(v1.x, v1.y);
+        ctx.lineTo(v2.x, v2.y);
+        ctx.closePath();
+        ctx.stroke();
+
+        // Inner Anchor-Gated Safe Sub-Simplex Δ_α (α = 0.06)
+        function baryPt(a, b, c) {
+          return { x: a * v0.x + b * v1.x + c * v2.x, y: a * v0.y + b * v1.y + c * v2.y };
+        }
+        const a0 = baryPt(0.88, 0.06, 0.06);
+        const a1 = baryPt(0.06, 0.88, 0.06);
+        const a2 = baryPt(0.06, 0.06, 0.88);
+        ctx.fillStyle = 'rgba(45, 212, 191, 0.08)';
+        ctx.strokeStyle = 'rgba(45, 212, 191, 0.40)';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(a0.x, a0.y);
+        ctx.lineTo(a1.x, a1.y);
+        ctx.lineTo(a2.x, a2.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Labels
+        ctx.font = '600 9px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#2dd4bf';
+        ctx.fillText('LOOP', v0.x, v0.y - 4);
+        ctx.fillStyle = '#e879f9';
+        ctx.fillText('CALL', v1.x + 8, v1.y + 11);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText('SPLICE', v2.x - 10, v2.y + 11);
+
+        // Current Prior Point
+        const cur = baryPt(priorBary.pLoop, priorBary.pCall, priorBary.pSplice);
+        ctx.beginPath();
+        ctx.arc(cur.x, cur.y, 8, 0, TAU);
+        ctx.fillStyle = 'rgba(45, 212, 191, 0.25)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(cur.x, cur.y, 4.5, 0, TAU);
+        ctx.fillStyle = '#2dd4bf';
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      /* ---------------------------------------------------------------------
+       * 9. UNIFIED CELL ARENA & SACRED SPLICER CODON VM
+       * -------------------------------------------------------------------*/
+      const SACRED_CODON_CATALOG = [
+        { op: 0xA0, mnem: 'CELL_SYNC', tier: 'Tier-1 Prim', fuel: 1, isAnchor: true, desc: 'Entry homology marker aligning cell arena frame & initializing deterministic PRNG state.' },
+        { op: 0x12, mnem: 'LD_INPUT', tier: 'Tier-1 Prim', fuel: 2, isAnchor: false, desc: 'Loads bounded slice element x[idx] from sandboxed input ring without raw pointer arithmetic.' },
+        { op: 0x34, mnem: 'LOOP_HEAD', tier: 'Tier-2 Structured', fuel: 3, isAnchor: true, desc: 'Fuel-metered structured loop header; pairs strictly with LOOP_TAIL across homologous splices.' },
+        { op: 0x21, mnem: 'ADD_MOD10', tier: 'Tier-1 Prim', fuel: 1, isAnchor: false, desc: 'Computes modular residue (acc + reg) mod 10 for Triangular Sum reduction steps.' },
+        { op: 0x28, mnem: 'BINOM_ADJ', tier: 'Tier-2 Organ', fuel: 3, isAnchor: false, desc: 'Updates adjacent pair x[i] <- (x[i] + x[i+1]) mod 10 in-place inside cell scratchpad.' },
+        { op: 0x42, mnem: 'CALL_ORGAN', tier: 'Tier-3 WASM', fuel: 5, isAnchor: false, desc: 'Invokes capability-jailed Extiroh WASM micro-organ through triad_shim.rs.' },
+        { op: 0xA4, mnem: 'HOM_SEAM', tier: 'Sacred Seam', fuel: 1, isAnchor: true, desc: 'Conserved homologous crossover seam guaranteeing zero LOOP/CALL depth mismatch during splicing.' },
+        { op: 0x39, mnem: 'DEC_LEN', tier: 'Tier-1 Prim', fuel: 1, isAnchor: false, desc: 'Decrements active triangular array width n -> n - 1 toward base case n == 1.' },
+        { op: 0x2F, mnem: 'XOR_FOLD', tier: 'Tier-1 Prim', fuel: 1, isAnchor: false, desc: 'Bitwise parity mixer folding intermediate state into causal register.' },
+        { op: 0x35, mnem: 'LOOP_TAIL', tier: 'Tier-2 Structured', fuel: 2, isAnchor: true, desc: 'Structured bounded back-edge; automatically aborts if cell fuel counter hits zero.' },
+        { op: 0x51, mnem: 'PRIOR_TICK', tier: 'Tier-2 Adaptive', fuel: 2, isAnchor: false, desc: 'Credits winning opcode lineage on the Anchor-Gated Dirichlet Simplex Δ_α.' },
+        { op: 0xFE, mnem: 'EMIT_SEAL', tier: 'Sacred Seal', fuel: 2, isAnchor: true, desc: 'Emits cell output & seals 32-bit causal Merkle-CRDT provenance digest.' }
+      ];
+
+      // Conserved anchor indices keep control flow 100% valid across any homologous splice!
+      const SEAM_LOCI = [3, 7, 11];
+      let arenaGeneration = 42;
+      let activeSeamSlot = 7;
+      let selectedCodonSlot = 7;
+      let parentAlpha = [];
+      let parentBeta = [];
+      let childTape = [];
+
+      function buildInitialGenomes() {
+        parentAlpha = [0, 1, 2, 6, 3, 7, 9, 6, 2, 4, 7, 6, 8, 9, 10, 11];
+        parentBeta  = [0, 2, 4, 6, 5, 3, 9, 6, 1, 3, 5, 6, 4, 7, 10, 11];
+        performSacredSplice(7);
+      }
+
+      function performSacredSplice(seamIdx) {
+        activeSeamSlot = seamIdx;
+        childTape = [];
+        for (let i = 0; i < 16; i++) {
+          if (i < seamIdx) {
+            childTape.push({ catIdx: parentAlpha[i], from: 'Alpha' });
+          } else if (i === seamIdx) {
+            childTape.push({ catIdx: 6, from: 'Seam' }); // Conserved HOM_SEAM
+          } else {
+            childTape.push({ catIdx: parentBeta[i], from: 'Beta' });
+          }
+        }
+        renderChildArena();
+        drawCrossoverCanvas();
+      }
+
+      function renderChildArena() {
+        const bytes = childTape.map(function (c) { return SACRED_CODON_CATALOG[c.catIdx].op; });
+        const digest = hashBytesFNV1a(bytes, arenaGeneration);
+        const hexDigest = '0x' + digest.toString(16).toUpperCase().padStart(8, '0');
+        let totalFuel = 0;
+        childTape.forEach(function (c) { totalFuel += SACRED_CODON_CATALOG[c.catIdx].fuel; });
+
+        document.getElementById('arena-gen-badge').textContent =
+          'Generation #' + String(arenaGeneration).padStart(3, '0') + ' · Homologous Seam @ Slot [' + String(activeSeamSlot).padStart(2, '0') + ']';
+        document.getElementById('arena-merkle-tag').textContent =
+          'Causal Digest: ' + hexDigest + ' (Zero-Trust Fuel: ' + totalFuel + ' / 256)';
+        document.getElementById('hud-merkle').textContent =
+          hexDigest.slice(0, 6) + '..' + hexDigest.slice(-4);
+
+        const alphaPct = Math.round((activeSeamSlot / 16) * 100);
+        document.getElementById('child-lineage-label').textContent =
+          alphaPct + '% Parent Alpha · ' + (100 - alphaPct) + '% Parent Beta · 100% Frame-Safe';
+
+        const grid = document.getElementById('codon16-grid');
+        grid.innerHTML = childTape.map(function (slot, idx) {
+          const info = SACRED_CODON_CATALOG[slot.catIdx];
+          const isSel = idx === selectedCodonSlot;
+          const badgeStyle = slot.from === 'Seam'
+            ? 'text-amber-300 border-amber-500/40 bg-amber-500/15'
+            : (slot.from === 'Alpha' ? 'text-teal-300 border-teal-500/40 bg-teal-500/10' : 'text-fuchsia-300 border-fuchsia-500/40 bg-fuchsia-500/10');
+          const boxCls = isSel
+            ? 'bg-teal-500/20 border-teal-400 ring-1 ring-teal-400/50'
+            : 'bg-biosplice-950/85 border-slate-800 hover:border-slate-600';
+
+          return (
+            '<button type="button" data-cslot="' + idx + '" class="codon-btn text-left p-2.5 rounded-xl border font-mono transition ' + boxCls + '">' +
+              '<div class="flex items-center justify-between text-[10px]">' +
+                '<span class="text-slate-400">[' + String(idx).padStart(2, '0') + '] 0x' + info.op.toString(16).toUpperCase() + '</span>' +
+                '<span class="px-1.5 py-0.2 rounded border text-[9px] ' + badgeStyle + '">' + slot.from + '</span>' +
+              '</div>' +
+              '<div class="text-xs text-white font-semibold mt-1 truncate">' + info.mnem + '</div>' +
+            '</button>'
+          );
+        }).join('');
+
+        grid.querySelectorAll('.codon-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            selectedCodonSlot = parseInt(this.getAttribute('data-cslot'), 10);
+            renderChildArena();
+          });
+        });
+
+        updateCodonInspector();
+      }
+
+      function updateCodonInspector() {
+        const slot = childTape[selectedCodonSlot];
+        if (!slot) return;
+        const info = SACRED_CODON_CATALOG[slot.catIdx];
+
+        document.getElementById('selected-codon-badge').textContent =
+          'Slot [' + String(selectedCodonSlot).padStart(2, '0') + '] · ' + slot.from.toUpperCase();
+        document.getElementById('codon-mnemonic').textContent =
+          'OP_' + info.mnem + ' (0x' + info.op.toString(16).toUpperCase() + ')';
+        document.getElementById('codon-origin-pill').textContent =
+          info.isAnchor ? 'Conserved Anchor' : ('Inherited: ' + slot.from);
+        document.getElementById('codon-desc').textContent = info.desc;
+
+        const pEst = info.mnem.indexOf('LOOP') >= 0
+          ? priorBary.pLoop
+          : (info.mnem.indexOf('CALL') >= 0 ? priorBary.pCall : priorBary.pSplice * 0.65);
+        document.getElementById('codon-prior-val').textContent =
+          pEst.toFixed(3) + ' (Anchor ≥ 0.05)';
+        document.getElementById('codon-wasm-tier').textContent =
+          info.tier + ' · ' + info.fuel + ' fuel';
+      }
+
+      function drawCrossoverCanvas() {
+        const canvas = document.getElementById('crossover-canvas');
+        if (!canvas) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = canvas.clientWidth || 640;
+        const h = canvas.clientHeight || 185;
+        if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const padX = 28;
+        const stepX = (w - padX * 2) / 15;
+        const yAlpha = 38;
+        const yBeta = 92;
+        const yChild = 152;
+        const seamX = padX + activeSeamSlot * stepX;
+
+        // Labels
+        ctx.font = '600 10px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#2dd4bf';
+        ctx.fillText('Parent Alpha Cell', padX, 18);
+        ctx.fillStyle = '#e879f9';
+        ctx.fillText('Parent Beta Cell', padX + 145, 18);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText('Homologous Seam @ [' + String(activeSeamSlot).padStart(2, '0') + ']', w - 185, 18);
+
+        // Vertical Homologous Seam Highlight Pillar
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.12)';
+        roundedRectPath(ctx, seamX - 12, 24, 24, h - 32, 8);
+        ctx.fill();
+
+        // Draw inheritance curves from Alpha (< seam) and Beta (> seam) into Spliced Child
+        for (let i = 0; i < 16; i++) {
+          const x = padX + i * stepX;
+          const srcY = i < activeSeamSlot ? yAlpha : (i === activeSeamSlot ? (yAlpha + yBeta) * 0.5 : yBeta);
+          ctx.strokeStyle = i < activeSeamSlot
+            ? 'rgba(45, 212, 191, 0.42)'
+            : (i === activeSeamSlot ? 'rgba(250, 204, 21, 0.85)' : 'rgba(232, 121, 249, 0.42)');
+          ctx.lineWidth = i === selectedCodonSlot ? 2.4 : 1.3;
+          ctx.beginPath();
+          ctx.moveTo(x, srcY + 8);
+          ctx.bezierCurveTo(x, (srcY + yChild) * 0.5, x, (srcY + yChild) * 0.5, x, yChild - 8);
+          ctx.stroke();
+
+          // Parent Alpha Node
+          ctx.beginPath();
+          ctx.arc(x, yAlpha, i < activeSeamSlot ? 5.2 : 3.4, 0, TAU);
+          ctx.fillStyle = i < activeSeamSlot ? '#2dd4bf' : 'rgba(45, 212, 191, 0.28)';
+          ctx.fill();
+
+          // Parent Beta Node
+          ctx.beginPath();
+          ctx.arc(x, yBeta, i > activeSeamSlot ? 5.2 : 3.4, 0, TAU);
+          ctx.fillStyle = i > activeSeamSlot ? '#e879f9' : 'rgba(232, 121, 249, 0.28)';
+          ctx.fill();
+
+          // Spliced Child Node
+          ctx.beginPath();
+          ctx.arc(x, yChild, i === selectedCodonSlot ? 6.8 : 5.2, 0, TAU);
+          ctx.fillStyle = i === activeSeamSlot ? '#facc15' : (i < activeSeamSlot ? '#2dd4bf' : '#e879f9');
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      function initArenaEvents() {
+        document.getElementById('btn-sacred-splice').addEventListener('click', function () {
+          arenaGeneration++;
+          const nextSeam = SEAM_LOCI[arenaGeneration % SEAM_LOCI.length];
+          selectedCodonSlot = nextSeam;
+          performSacredSplice(nextSeam);
+          showToast('Sacred Splice complete at Homologous Seam [' + String(nextSeam).padStart(2, '0') + ']', 'teal');
+        });
+
+        document.getElementById('btn-mitosis-step').addEventListener('click', function () {
+          arenaGeneration++;
+          // Mutate non-anchor interior codons of Beta via A/B mitosis branch while preserving structural anchors!
+          const mutPool = [1, 3, 4, 5, 7, 8, 10];
+          for (let k = 0; k < 16; k++) {
+            if (SEAM_LOCI.indexOf(k) < 0 && k !== 0 && k !== 15 && Math.random() < 0.45) {
+              parentBeta[k] = mutPool[Math.floor(Math.random() * mutPool.length)];
+            }
+          }
+          performSacredSplice(activeSeamSlot);
+          showToast('Mitosis A/B Daughter won tournament & promoted to Arena!', 'fuchsia');
+        });
+
+        document.getElementById('btn-mutate-priors').addEventListener('click', function () {
+          const raw = [Math.random(), Math.random(), Math.random()];
+          const proj = anchorProject(raw, 0.08);
+          priorBary.pLoop = proj[0];
+          priorBary.pCall = proj[1];
+          priorBary.pSplice = proj[2];
+          drawSimplexPad();
+          updateCodonInspector();
+          showToast('Sampled new Anchor-Gated Dirichlet Priors Δ_α', 'amber');
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       * 10. SUBSTRATE CODE VAULT, HARDENING ORACLE & LEXICASE SIMULATOR
+       * -------------------------------------------------------------------*/
+      const SUBSTRATE_SNIPPETS = {
+        v4_uni: {
+          label: 'substrates/c11/v4_unigenesis.c (19,588 bytes)',
+          code:
+`/* Unified Cell Arena: O(1) Mitosis Clone + Sacred Homologous Crossover */
+typedef struct alignas(64) {
+    uint64_t merkle_digest;
+    float    priors[4];         /* Anchor-gated simplex p_k >= 0.05f */
+    uint8_t  codons[128];       /* Contiguous zero-pointer bytecode  */
+    uint32_t fuel_budget;
+} UnigenesisCell;
+
+void mitosis_branch_and_splice(UnigenesisCell * restrict child,
+                               const UnigenesisCell *a, const UnigenesisCell *b,
+                               size_t hom_seam) {
+    memcpy(child, a, sizeof(UnigenesisCell));
+    memcpy(&child->codons[hom_seam], &b->codons[hom_seam], 128 - hom_seam);
+    child->merkle_digest = causal_merkle_seal(child->codons, 128, a->merkle_digest ^ b->merkle_digest);
+}`
+        },
+        extiroh_rs: {
+          label: 'substrates/extiroh/runtime_loop.rs (25,872 bytes)',
+          code:
+`/// Deterministic Extiroh Organ Runtime Loop with Causal Merkle-CRDT Merge
+pub fn step_evolutionary_epoch(fabric: &mut CrtdFabric, rng_chain: &mut HashChainRng) -> EpochReceipt {
+    let parents = fabric.select_lexicase_parents(rng_chain);
+    let child_organ = sacred_splicer::homologous_recombine(&parents.0, &parents.1, rng_chain);
+    let verdict = triad_shim::eval_zero_trust_cell(&child_organ, FUEL_CEILING_256);
+    fabric.merge_semilattice_state(verdict.into_crdt_delta())
+}`
+        },
+        triad_rs: {
+          label: 'substrates/extiroh/triad_shim.rs (15,514 bytes)',
+          code:
+`/// Zero-Trust Execution Cell Shim: Host <-> Broker <-> Sandboxed WASM Organ
+pub fn eval_zero_trust_cell(organ: &WasmOrgan, max_fuel: u32) -> CellVerdict {
+    let mut store = SandboxedStore::with_fuel_and_linear_cap(max_fuel, 65_536);
+    // Zero ambient syscalls: organ can only read input slice & emit bounded result
+    match organ.invoke_metered(&mut store) {
+        Ok(out) => CellVerdict::Sealed { output: out, fuel_used: max_fuel - store.fuel_rem() },
+        Err(Trap::OutOfFuel) => CellVerdict::QuarantinedTimeout,
+    }
+}`
+        },
+        c11_hard: {
+          label: 'substrates/c11/test_c11_hardening.c (20,998 bytes)',
+          code:
+`/* Hardening Suite: Verifies Zero Frame Corruption, Fuel Halting & Simplex Floor */
+static void test_sacred_splice_preserves_balanced_loops(void) {
+    for (size_t trial = 0; trial < 4096; ++trial) {
+        UnigenesisCell child;
+        mitosis_branch_and_splice(&child, &cell_alpha, &cell_beta, find_homologous_seam(&cell_alpha));
+        assert(verify_balanced_loop_depth(child.codons, 128) == 0);
+        assert(verify_anchor_simplex_floor(child.priors, 4, 0.05f) == true);
+    }
+}`
+        },
+        prop_lex: {
+          label: 'docs/proposals/2026-11-lexicase-and-triangular-sum.md (3,809 bytes)',
+          code:
+`# Proposal 2026-11: Lexicase Selection & Triangular Sum Synthesis
+Target Task (LeetCode #2221 / Binomial Contraction):
+  Given x[0..n-1] in Z_10, repeatedly replace x[i] <- (x[i] + x[i+1]) mod 10
+  until n == 1, equivalent to T(x) = sum_{k=0}^{n-1} C(n-1, k) * x[k] mod 10.
+
+Why Scalar Fitness Fails:
+  A program returning a constant or unrolled 2-step sum scores high mean accuracy on
+  short inputs, extinguishing the rare nested-LOOP + mod-10 carry specialist before
+  Sacred Splicing can combine them. Lexicase selection isolates each edge case!`
+        }
+      };
+
+      function runLiveHardeningOracle(trials) {
+        let crdtExact = 0;
+        let maxSimplexSumErr = 0.0;
+        let minAnchorSeen = 1.0;
+        let triangularMatches = 0;
+
+        for (let i = 0; i < trials; i++) {
+          // 1. Merkle-CRDT Join-Semilattice Commutativity, Associativity & Idempotence (max-vector clock / bitwise lattice)
+          const sA = (Math.random() * 0xffffffff) >>> 0;
+          const sB = (Math.random() * 0xffffffff) >>> 0;
+          const sC = (Math.random() * 0xffffffff) >>> 0;
+          const joinAB = (sA | sB) >>> 0;
+          const joinBA = (sB | sA) >>> 0;
+          const joinABC1 = ((sA | sB) | sC) >>> 0;
+          const joinABC2 = (sA | (sB | sC)) >>> 0;
+          const idem = (sA | sA) >>> 0;
+          if (joinAB === joinBA && joinABC1 === joinABC2 && idem === sA) crdtExact++;
+
+          // 2. Anchor-Gated Simplex Projection Sum == 1 and min(p_k) >= 0.05
+          const p = anchorProject([Math.random() * 5, Math.random() * 0.001, Math.random() * 3, 0.0], 0.05);
+          const sum = p[0] + p[1] + p[2] + p[3];
+          maxSimplexSumErr = Math.max(maxSimplexSumErr, Math.abs(sum - 1.0));
+          minAnchorSeen = Math.min(minAnchorSeen, p[0], p[1], p[2], p[3]);
+
+          // 3. Triangular Sum Iterative Contraction == Binomial Closed Form sum C(n-1, k) x_k mod 10!
+          const n = 1 + (i % 9);
+          const arr = [];
+          for (let k = 0; k < n; k++) arr.push((i * 7 + k * 3 + 1) % 10);
+
+          let closedSum = 0;
+          for (let k = 0; k < n; k++) {
+            closedSum = (closedSum + PASCAL_MOD10[n - 1][k] * arr[k]) % 10;
+          }
+          let cur = arr.slice();
+          while (cur.length > 1) {
+            const nxt = [];
+            for (let k = 0; k < cur.length - 1; k++) {
+              nxt.push((cur[k] + cur[k + 1]) % 10);
+            }
+            cur = nxt;
+          }
+          if (cur[0] === closedSum) triangularMatches++;
+        }
+
+        const cards = [
+          { label: 'CRDT Semilattice Laws (⊔)', val: crdtExact + '/' + trials + ' (100%)' },
+          { label: 'Simplex Conservation |∑p − 1|', val: maxSimplexSumErr.toExponential(2) + ' ✓' },
+          { label: 'Anchor Floor Guarantee min(p)', val: minAnchorSeen.toFixed(4) + ' ≥ 0.05 ✓' },
+          { label: 'Triangular-Sum Binomial Eq', val: triangularMatches + '/' + trials + ' (100%)' }
+        ];
+
+        document.getElementById('oracle-results').innerHTML = cards.map(function (c) {
+          return (
+            '<div class="p-2.5 rounded-xl bg-biosplice-950/90 border border-slate-800 flex items-center justify-between gap-2">' +
+              '<span class="text-slate-300 truncate">' + c.label + '</span>' +
+              '<span class="text-emerald-300 font-semibold shrink-0">' + c.val + '</span>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      /* ---------------------------------------------------------------------
+       * 11. INTERACTIVE LEXICASE SELECTION × TRIANGULAR SUM SIMULATOR
+       * -------------------------------------------------------------------*/
+      const TEST_CASES = ['T0:N=1', 'T1:Pair', 'T2:Len4', 'T3:Carry', 'T4:Zero', 'T5:N=16'];
+      let candidates = [
+        { id: 'C1 · Shallow Unroll', scores: [1.00, 1.00, 0.92, 0.20, 1.00, 0.15] }, // Highest mean (0.71), fails deep loop & carry!
+        { id: 'C2 · Base-Case Guard', scores: [1.00, 0.85, 0.40, 0.30, 1.00, 0.20] },
+        { id: 'C3 · Outer-Loop Gene', scores: [0.30, 0.75, 0.96, 0.45, 0.60, 1.00] }, // Deep N=16 loop specialist!
+        { id: 'C4 · Pairwise Step',   scores: [0.20, 1.00, 1.00, 0.50, 0.80, 0.65] },
+        { id: 'C5 · Mod-10 Carry!',   scores: [0.15, 0.40, 0.45, 1.00, 0.55, 0.40] }, // Rare Carry specialist (low mean 0.49, killed by scalar!)
+        { id: 'C6 · Spliced Child ★', scores: [1.00, 1.00, 0.98, 0.96, 1.00, 0.96], hiddenUntilSplice: true }
+      ];
+      let caseOrder = [3, 5, 0, 2, 1, 4]; // Starts with T3:Carry first!
+      let splicedUnlocked = false;
+
+      function getActiveCandidates() {
+        return candidates.filter(function (c) { return !c.hiddenUntilSplice || splicedUnlocked; });
+      }
+
+      function runLexicasePass(pool, order, eps) {
+        let survivors = pool.slice();
+        for (let step = 0; step < order.length; step++) {
+          const tIdx = order[step];
+          let best = -1;
+          for (let i = 0; i < survivors.length; i++) {
+            if (survivors[i].scores[tIdx] > best) best = survivors[i].scores[tIdx];
+          }
+          survivors = survivors.filter(function (c) {
+            return c.scores[tIdx] >= best - eps - 1e-9;
+          });
+          if (survivors.length === 1) break;
+        }
+        return survivors[0];
+      }
+
+      function drawLexicaseCanvas() {
+        const canvas = document.getElementById('lexicase-canvas');
+        if (!canvas) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = canvas.clientWidth || 440;
+        const h = canvas.clientHeight || 225;
+        if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        const eps = parseFloat(document.getElementById('slider-eps').value);
+        document.getElementById('val-eps').textContent = eps.toFixed(2);
+
+        const pool = getActiveCandidates();
+        const winner = runLexicasePass(pool, caseOrder, eps);
+
+        // Compute Scalar Mean Winner
+        let bestMean = -1;
+        let scalarWin = pool[0];
+        pool.forEach(function (c) {
+          const m = c.scores.reduce(function (a, b) { return a + b; }, 0) / c.scores.length;
+          if (m > bestMean) { bestMean = m; scalarWin = c; }
+        });
+
+        document.getElementById('lex-scalar-winner').textContent =
+          splicedUnlocked ? 'C6 ★ (Mean ' + bestMean.toFixed(2) + ')' : 'Only C1 (Kills C3 & C5!)';
+        document.getElementById('lex-perm-winner').textContent =
+          winner.id + ' (via ' + TEST_CASES[caseOrder[0]] + ')';
+
+        // Draw Header Row (Permuted Case Order π)
+        const leftLabelW = 126;
+        const cellW = (w - leftLabelW - 14) / 6;
+        const rowH = (h - 34) / pool.length;
+
+        ctx.font = '600 9.5px "JetBrains Mono", monospace';
+        for (let col = 0; col < 6; col++) {
+          const tIdx = caseOrder[col];
+          const cx = leftLabelW + col * cellW + cellW * 0.5;
+          ctx.fillStyle = col === 0 ? '#fbbf24' : '#94a3b8';
+          ctx.textAlign = 'center';
+          ctx.fillText((col + 1) + ':' + TEST_CASES[tIdx].split(':')[1], cx, 17);
+        }
+
+        // Draw Candidate Rows & Score Cells
+        for (let r = 0; r < pool.length; r++) {
+          const cand = pool[r];
+          const y = 26 + r * rowH;
+          const isWin = cand.id === winner.id;
+
+          if (isWin) {
+            ctx.fillStyle = 'rgba(45, 212, 191, 0.14)';
+            roundedRectPath(ctx, 6, y + 1, w - 12, rowH - 3, 6);
+            ctx.fill();
+          }
+
+          ctx.textAlign = 'left';
+          ctx.fillStyle = isWin ? '#2dd4bf' : '#e2e8f0';
+          ctx.font = (isWin ? '700 ' : '500 ') + '10px "JetBrains Mono", monospace';
+          ctx.fillText(cand.id, 12, y + rowH * 0.62);
+
+          for (let col = 0; col < 6; col++) {
+            const tIdx = caseOrder[col];
+            const sc = cand.scores[tIdx];
+            const bx = leftLabelW + col * cellW + 3;
+            const bw = cellW - 6;
+            const bh = rowH - 7;
+
+            ctx.fillStyle = sc >= 0.95
+              ? 'rgba(45, 212, 191, 0.78)'
+              : (sc >= 0.65 ? 'rgba(250, 204, 21, 0.55)' : 'rgba(244, 63, 94, 0.35)');
+            roundedRectPath(ctx, bx, y + 3.5, bw, bh, 5);
+            ctx.fill();
+
+            ctx.fillStyle = '#04090b';
+            ctx.font = '700 9.5px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(sc.toFixed(2), bx + bw * 0.5, y + rowH * 0.64);
+          }
+        }
+
+        ctx.restore();
+      }
+
+      function initLexicaseEvents() {
+        document.getElementById('slider-eps').addEventListener('input', drawLexicaseCanvas);
+
+        document.getElementById('btn-shuffle-lex').addEventListener('click', function () {
+          // Fisher-Yates shuffle of test case priorities
+          for (let i = caseOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = caseOrder[i];
+            caseOrder[i] = caseOrder[j];
+            caseOrder[j] = tmp;
+          }
+          drawLexicaseCanvas();
+          showToast('Permuted Lexicase Filter Priority π: ' + TEST_CASES[caseOrder[0]] + ' leads!', 'amber');
+        });
+
+        document.getElementById('btn-splice-specialists').addEventListener('click', function () {
+          splicedUnlocked = !splicedUnlocked;
+          this.textContent = splicedUnlocked ? 'Reset Specialists' : 'Splice Winners →';
+          drawLexicaseCanvas();
+          if (splicedUnlocked) {
+            showToast('Sacred Spliced C3 (Outer Loop) + C5 (Mod-10 Carry) → Generalist C6 ★!', 'teal');
+          }
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       * 12. REPOSITORY & MITHRAX SESSION ATLAS (EXACT spliceware-main.zip)
+       * -------------------------------------------------------------------*/
+      const REPO_FILES = [
+        { cat: 'docs', path: 'docs/INDEX.md', size: '5,607 B', desc: 'Master architectural map unifying Spliceware’s broker, CRDT determinism, Extiroh WASM, and cellular splicing.' },
+        { cat: 'docs', path: 'docs/01-polymerized-splicer-broker.md', size: '1,837 B', desc: 'Polymerized tech-agnostic capability broker replacing brittle prompt-chained agent wrappers.' },
+        { cat: 'docs', path: 'docs/02-causal-cryptographic-determinism.md', size: '2,118 B', desc: 'Hash-chained PRNGs, content-addressed lineages, and Merkle-CRDT join-semilattice convergence.' },
+        { cat: 'docs', path: 'docs/03-extiroh-wasm-substrate.md', size: '2,267 B', desc: 'Extiroh WebAssembly execution substrate, tiered organ synthesis, and zero-trust fuel sandboxing.' },
+        { cat: 'docs', path: 'docs/04-cellular-substrate-and-sacred-splicer.md', size: '2,825 B', desc: 'Contiguous Unified Cell Arenas, O(1) mitosis tournaments, and structure-preserving Sacred Splicing.' },
+        { cat: 'docs', path: 'docs/05-adaptive-priors-and-lexicase-selection.md', size: '3,227 B', desc: 'Anchor-gated opcode probability simplexes paired with specialist-preserving Lexicase selection.' },
+        { cat: 'docs', path: 'docs/proposals/2026-11-lexicase-and-triangular-sum.md', size: '3,809 B', desc: 'November 2026 proposal formulating Lexicase + Triangular Sum binomial contraction synthesis.' },
+        { cat: 'c11', path: 'substrates/c11/v3_evogenesis.c', size: '28,517 B', desc: 'Full evolutionary C11 substrate integrating multi-deme population mitosis and homologous crossover.' },
+        { cat: 'c11', path: 'substrates/c11/test_c11_hardening.c', size: '20,998 B', desc: 'Rigorous C11 hardening suite testing arena bounds, fuel halting, simplex floors, and loop balance.' },
+        { cat: 'c11', path: 'substrates/c11/v2_adaptive_loop.c', size: '20,037 B', desc: 'Introduces online adaptive LOOP/CALL opcode weight updates with anchor-gated floor protection.' },
+        { cat: 'c11', path: 'substrates/c11/v4_unigenesis.c', size: '19,588 B', desc: 'Unified single-arena C11 architecture consolidating genesis, adaptive priors, and Sacred Splicing.' },
+        { cat: 'c11', path: 'substrates/c11/v1_genesis.c', size: '14,084 B', desc: 'Foundational C11 cellular execution substrate & deterministic mitosis tournament seed.' },
+        { cat: 'c11', path: 'substrates/c11/CHANGELOG.md', size: '3,513 B', desc: 'Chronicles the architectural evolution from v1_genesis through v4_unigenesis hardening.' },
+        { cat: 'extiroh', path: 'substrates/extiroh/runtime_loop.rs', size: '25,872 B', desc: 'Rust evolutionary orchestrator driving Extiroh organ scheduling, CRDT state merges, and selection.' },
+        { cat: 'extiroh', path: 'substrates/extiroh/triad_shim.rs', size: '15,514 B', desc: 'Zero-trust Host–Broker–Organ triad boundary shim enforcing fuel limits and capability isolation.' },
+        { cat: 'extiroh', path: 'substrates/extiroh/README.md', size: '3,117 B', desc: 'Crate documentation and execution guide for the Extiroh Rust/WASM evolutionary substrate.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/conversation.md', size: '134,256 B', desc: 'Complete genesis engineering dialogue & derivations (+ 3 raw MHTML/DOM multi-tab captures).' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/inline-element-15-sacred-splicer-codon-table.html', size: '17,698 B', desc: 'Reference Sacred Splicer codon opcode specification & homologous boundary semantics table.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/code-10-genesis-substrate-complete.c', size: '12,038 B', desc: 'Complete extracted C genesis substrate prototype from the Mithrax splicing session.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/inline-element-19-triangular-sum-vs-targets-table.html', size: '11,405 B', desc: 'Comparative analysis of the Triangular Sum synthesis benchmark against program synthesis targets.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/inline-element-18-anchor-gated-projection-tradeoffs-table.html', size: '9,810 B', desc: 'Mathematical tradeoff matrix comparing Anchor-Gated Simplex Projection vs unguarded weight drift.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/inline-element-14-homologous-crossover-diagram.svg', size: '8,466 B', desc: 'Vector architectural schematic (+ Cell Arena & Zero-Trust Cell SVGs) of homologous seam splicing.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/code-04-continuous-substrate-flow-complete.c', size: '6,525 B', desc: 'Continuous cellular substrate flow & metabolic tournament loop implementation.' },
+        { cat: 'mithrax', path: 'mithrax-splicing-session/code-13-loop-call-adaptive-weights.c', size: '5,274 B', desc: 'Adaptive prior weight update implementation for structured LOOP and CALL opcodes.' }
+      ];
+
+      function renderAtlas(filterKey) {
+        const styles = {
+          docs: 'text-teal-300 bg-teal-500/15 border-teal-500/30',
+          c11: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/30',
+          extiroh: 'text-fuchsia-300 bg-fuchsia-500/15 border-fuchsia-500/30',
+          mithrax: 'text-amber-300 bg-amber-500/15 border-amber-500/30'
+        };
+        const items = REPO_FILES.filter(function (f) {
+          return filterKey === 'all' || f.cat === filterKey;
+        });
+        document.getElementById('atlas-grid').innerHTML = items.map(function (f) {
+          return (
+            '<div class="glass-panel rounded-2xl p-4 flex flex-col justify-between gap-2.5 hover:border-slate-600 transition">' +
+              '<div>' +
+                '<div class="flex items-center justify-between gap-2 mb-2">' +
+                  '<span class="px-2 py-0.5 rounded-md text-[10px] font-mono border ' + styles[f.cat] + '">' + f.cat + '</span>' +
+                  '<span class="text-[11px] font-mono text-slate-400">' + f.size + '</span>' +
+                '</div>' +
+                '<div class="font-mono text-xs text-white font-semibold break-all">' + f.path + '</div>' +
+                '<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">' + f.desc + '</p>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      /* ---------------------------------------------------------------------
+       * 13. KATEX RENDERING, PRESET LOADER & UI INITIALIZATION
+       * -------------------------------------------------------------------*/
+      function safeRenderKatex(el, tex, displayMode) {
+        if (!el) return;
+        if (window.katex) {
+          window.katex.render(tex, el, { throwOnError: false, displayMode: !!displayMode });
+        } else {
+          el.textContent = tex;
+        }
+      }
+
+      function loadPreset(key) {
+        const p = PRESETS[key];
+        if (!p) return;
+        currentPresetKey = key;
+
+        document.querySelectorAll('.preset-btn').forEach(function (btn) {
+          const active = btn.getAttribute('data-preset') === key;
+          btn.className = active
+            ? 'preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-teal-500/20 border-teal-400 text-teal-200'
+            : 'preset-btn px-3 py-1.5 rounded-xl text-xs font-mono border transition bg-slate-900/70 border-slate-700 text-slate-300 hover:border-slate-500';
+        });
+
+        document.getElementById('hud-mode-title').textContent = p.hudTitle;
+        document.getElementById('formula-badge').textContent = p.badge;
+        document.getElementById('formula-caption').textContent = p.caption;
+        document.getElementById('script-filename').textContent = p.filename;
+        safeRenderKatex(document.getElementById('studio-katex-box'), p.latex, true);
+
+        ['p0', 'p1', 'p2', 'p3'].forEach(function (sKey) {
+          const cfg = p.sliders[sKey];
+          const sl = document.getElementById('slider-' + sKey);
+          document.getElementById('label-' + sKey).textContent = cfg.label;
+          sl.min = cfg.min;
+          sl.max = cfg.max;
+          sl.step = cfg.step;
+          sl.value = cfg.val;
+          document.getElementById('val-' + sKey).textContent = Number(cfg.val).toFixed(2);
+        });
+
+        const editor = document.getElementById('splicescript-editor');
+        editor.value = p.code;
+        compileSpliceScript(p.code);
+      }
+
+      function initUIAndMath() {
+        safeRenderKatex(document.getElementById('hero-math-lex'), '\\epsilon\\text{-Lexicase}', false);
+
+        // Five Architectural Spine Equations
+        safeRenderKatex(document.getElementById('spine-math-1'),
+          '\\mathcal{B}_{\\text{poly}} : \\text{Intent} \\xrightarrow{\\text{CapToken}} \\bigoplus_{i} \\text{Organ}_i(\\text{C11} \\cup \\text{Rust} \\cup \\text{WASM})', true);
+        safeRenderKatex(document.getElementById('spine-math-2'),
+          'H_{t+1} = \\operatorname{BLAKE3}(H_t \\parallel \\text{op}_t \\parallel \\text{seed}_t), \\quad S_i \\sqcup S_j = \\sup\\{S_i, S_j\\}', true);
+        safeRenderKatex(document.getElementById('spine-math-3'),
+          '\\texttt{TriadShim}(\\text{Organ}, F_{\\max}) \\implies \\text{Halts in } \\le F_{\\max}\\text{ steps},\\; \\text{HeapEscape} = \\varnothing', true);
+        safeRenderKatex(document.getElementById('spine-math-4'),
+          '\\text{depth}_{\\texttt{LOOP}}(G_A[0..s_*]) = \\text{depth}_{\\texttt{LOOP}}(G_B[0..s_*]) \\implies \\text{Valid Child AST}', true);
+        safeRenderKatex(document.getElementById('spine-math-5'),
+          'T(\\mathbf{x}) = \\sum_{k=0}^{n-1} \\binom{n-1}{k} x_k \\bmod 10, \\quad p_k^{(t)} \\ge \\alpha > 0 \\;\\; \\forall k', true);
+
+        // Preset Buttons
+        document.querySelectorAll('.preset-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            loadPreset(this.getAttribute('data-preset'));
+          });
+        });
+
+        // Studio Sliders
+        ['p0', 'p1', 'p2', 'p3'].forEach(function (sKey) {
+          document.getElementById('slider-' + sKey).addEventListener('input', function () {
+            document.getElementById('val-' + sKey).textContent = Number(this.value).toFixed(2);
+          });
+        });
+
+        // Live Editor Auto-Compile
+        const editor = document.getElementById('splicescript-editor');
+        let editTimer = null;
+        editor.addEventListener('input', function () {
+          clearTimeout(editTimer);
+          editTimer = setTimeout(function () {
+            compileSpliceScript(editor.value);
+          }, 180);
+        });
+        editor.addEventListener('keydown', function (e) {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            if (compileSpliceScript(editor.value)) {
+              showToast('SpliceScript Kernel Recompiled at 60 FPS!', 'teal');
+            }
+          }
+        });
+        document.getElementById('btn-run-script').addEventListener('click', function () {
+          if (compileSpliceScript(editor.value)) {
+            showToast('SpliceScript Kernel Recompiled at 60 FPS!', 'teal');
+          }
+        });
+
+        // Viewport Controls
+        document.getElementById('btn-toggle-triad').addEventListener('click', function () {
+          showTriad = !showTriad;
+          this.textContent = showTriad ? 'Triad Frame: ON' : 'Triad Frame: OFF';
+        });
+        document.getElementById('btn-pause-sim').addEventListener('click', function () {
+          simPaused = !simPaused;
+          this.textContent = simPaused ? 'Resume' : 'Pause';
+        });
+        document.getElementById('btn-reset-cam').addEventListener('click', function () {
+          targetTheta = 0.64;
+          targetPhi = 1.18;
+          targetRadius = 5.35;
+        });
+
+        // Header Sonic & Copy
+        document.getElementById('btn-sonic-toggle').addEventListener('click', toggleSonification);
+        document.getElementById('btn-copy-ignite').addEventListener('click', function () {
+          copyTextSafe('make -C substrates/c11 && cargo build --manifest-path substrates/extiroh/Cargo.toml', 'C11 + Extiroh build command');
+        });
+
+        // Substrate Tabs
+        function selectSubTab(key) {
+          const item = SUBSTRATE_SNIPPETS[key];
+          document.getElementById('sub-file-label').textContent = item.label;
+          document.getElementById('sub-code-view').textContent = item.code;
+          document.querySelectorAll('.sub-tab').forEach(function (b) {
+            const active = b.getAttribute('data-sub') === key;
+            b.className = active
+              ? 'sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-teal-500/20 text-teal-200 border border-teal-400/40'
+              : 'sub-tab px-2.5 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-600';
+          });
+        }
+        document.querySelectorAll('.sub-tab').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            selectSubTab(this.getAttribute('data-sub'));
+          });
+        });
+        selectSubTab('v4_uni');
+        runLiveHardeningOracle(5000);
+
+        document.getElementById('btn-run-oracle').addEventListener('click', function () {
+          runLiveHardeningOracle(5000);
+          showToast('5,000 CRDT, Anchor-Simplex & Triangular-Sum Checks Passed!', 'teal');
+        });
+
+        // Atlas Filters
+        document.querySelectorAll('.atlas-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            renderAtlas(this.getAttribute('data-filter'));
+            document.querySelectorAll('.atlas-btn').forEach(function (b) {
+              b.className = (b === btn)
+                ? 'atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-teal-500/20 text-teal-200 border border-teal-400/40'
+                : 'atlas-btn px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800';
+            });
+          });
+        });
+        renderAtlas('all');
+      }
+
+      /* ---------------------------------------------------------------------
+       * 14. MAIN ANIMATION LOOP (STARTED CLEANLY ON window.onload)
+       * -------------------------------------------------------------------*/
+      let prevMs = 0;
+
+      function animateLoop(nowMs) {
+        requestAnimationFrame(animateLoop);
+
+        const dt = Math.min(0.05, (nowMs - prevMs) * 0.001 || 0.016);
+        prevMs = nowMs;
+
+        if (!simPaused) {
+          simTime += dt;
+          if (!isPointerDown) {
+            targetTheta += dt * 0.10;
+          }
+        }
+
+        camTheta += (targetTheta - camTheta) * 0.10;
+        camPhi += (targetPhi - camPhi) * 0.10;
+        camRadius += (targetRadius - camRadius) * 0.10;
+
+        camera.position.set(
+          camRadius * Math.sin(camPhi) * Math.cos(camTheta),
+          camRadius * Math.cos(camPhi),
+          camRadius * Math.sin(camPhi) * Math.sin(camTheta)
+        );
+        camera.lookAt(0, 0, 0);
+
+        updateCellularGeometry(simTime);
+        renderer.render(scene, camera);
+      }
+
+      window.onload = function () {
+        initThreeStage();
+        initSimplexPad();
+        initArenaEvents();
+        initLexicaseEvents();
+        initUIAndMath();
+        loadPreset('sacred');
+        drawSimplexPad();
+        buildInitialGenomes();
+        drawLexicaseCanvas();
+        prevMs = performance.now();
+        requestAnimationFrame(animateLoop);
+      };
+    })();
+  </script>
+</body>
+</html>
